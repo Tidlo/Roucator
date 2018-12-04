@@ -12,5 +12,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Intent intent = new Intent();
         intent.putExtra("test", "ssdfsdf");
+        intent.putExtra("branch", "branch");
     }
 }
