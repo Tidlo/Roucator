@@ -1,6 +1,7 @@
 package com.focjoe.roucator.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,7 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.focjoe.roucator.R;
-import com.focjoe.roucator.WifiItem;
+import com.focjoe.roucator.WifiInfoActivity;
+import com.focjoe.roucator.model.WifiItem;
+import com.focjoe.roucator.util.MyApplication;
 
 import java.util.List;
 
@@ -44,6 +47,9 @@ public class WifiItemAdapter extends RecyclerView.Adapter<WifiItemAdapter.ViewHo
                 int position = holder.getAdapterPosition();
                 final WifiItem wifiItem = wifiItems.get(position);
                 Log.d(TAG, "onClick: item clicked");
+                Intent intent = new Intent(MyApplication.getContext(), WifiInfoActivity.class);
+                intent.putExtra("item_index", position);
+                MyApplication.getContext().startActivity(intent);
             }
         });
 

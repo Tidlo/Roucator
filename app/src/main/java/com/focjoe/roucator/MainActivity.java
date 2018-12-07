@@ -24,6 +24,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.focjoe.roucator.adapter.WifiItemAdapter;
+import com.focjoe.roucator.model.WifiItem;
+import com.focjoe.roucator.util.MyApplication;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,9 +52,6 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private Toolbar toolbar;
     private FloatingActionButton btnRefresh;
-
-
-
 
 
     @Override
@@ -98,9 +97,11 @@ public class MainActivity extends AppCompatActivity {
                         swipeRefresh.setRefreshing(true);
                     }
                 });
-                initScanner();
+//                initScanner();
+                wifiManager.startScan();
             }
         });
+
 
 //        initial refresh
         swipeRefresh.post(new Runnable() {
@@ -156,7 +157,6 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-
     /**
      * 申请权限
      */
@@ -194,13 +194,15 @@ public class MainActivity extends AppCompatActivity {
                 item.setSignalStrengthIndB(scanResultList.get(i).level);
                 item.setCapabilities(scanResultList.get(i).capabilities);
 
-                Log.d(TAG, "onReceive: item's capabilities" + item.getCapabilities());
+//                Log.d(TAG, "onReceive: item's capabilities" + item.getCapabilities());
                 nearbyWifiList.add(item);
             }
 
+            MyApplication.setWifiItemList(nearbyWifiList);
+            Log.d(TAG, "onReceive: Updated global wifi item list.");
             WifiItemAdapter wifiItemAdapter = new WifiItemAdapter(nearbyWifiList);
             recyclerView.setAdapter(wifiItemAdapter);
-
+            wifiItemAdapter.notifyDataSetChanged();
 //            recyclerView 加载完毕后关闭刷新动画
             swipeRefresh.post(new Runnable() {
                 @Override

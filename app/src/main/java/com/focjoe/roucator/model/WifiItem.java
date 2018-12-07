@@ -1,4 +1,4 @@
-package com.focjoe.roucator;
+package com.focjoe.roucator.model;
 
 public class WifiItem {
     private String ssid;
