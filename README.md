@@ -4,7 +4,7 @@ Router locator. Envolving to be the best Wi-fi kit.
 ## Todo
 ***NOT NEED ROOT***
 
-- [ ] 路由器定位
+- [x] 路由器定位
 - [ ] 显示制造商
 - [ ] 进入管理页面
 - [ ] 信道评级
