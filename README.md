@@ -5,8 +5,8 @@ Router locator. Envolving to be the best Wi-fi kit.
 ***NOT NEED ROOT***
 
 - [x] 路由器定位
-- [ ] 显示制造商
-- [ ] 进入管理页面
+- [x] 显示制造商
+- [x] 进入管理页面
 - [ ] 信道评级
 - [ ] 信道图
 - [ ] 记住密码
