@@ -166,8 +166,9 @@ public class LocatorActivity extends AppCompatActivity {
     }
 
 
-    public double calculateDistance(WifiItem targetWifi) {
+    public static double calculateDistance(WifiItem targetWifi) {
         double exp = (27.55 - (20 * Math.log10(targetWifi.getFrequency())) + Math.abs(targetWifi.getSignalStrengthIndB())) / 20.0;
+//        return Math.pow(10.0, exp);
         return Math.pow(10.0, exp);
     }
 

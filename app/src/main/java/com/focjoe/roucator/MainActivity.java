@@ -203,6 +203,7 @@ public class MainActivity extends AppCompatActivity {
                 item.setInfoFrequencyBand(String.valueOf(item.getFrequency()));
                 item.setInfoCapility(item.getCapabilities());
                 item.setInfoManufacture(vendorService.findVendorName(item.getInfoMacAddress()));
+                item.setInfoDistance(String.format("%.2fm", LocatorActivity.calculateDistance(item)));
                 Log.d(TAG, "onReceive: AP signal level: " + scanResultList.get(i).level);
 //                Log.d(TAG, "onReceive: item's capabilities" + item.getCapabilities());
                 nearbyWifiList.add(item);
