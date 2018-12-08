@@ -24,6 +24,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.focjoe.roucator.adapter.WifiItemAdapter;
+import com.focjoe.roucator.model.VendorService;
+import com.focjoe.roucator.model.VendorServiceFactory;
 import com.focjoe.roucator.model.WifiItem;
 import com.focjoe.roucator.util.MyApplication;
 
@@ -59,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        使用 toolbar 取代 actionbar
+//        使用 main_toolbar 取代 actionbar
         toolbar = findViewById(R.id.main_tool_bar);
         setSupportActionBar(toolbar);
 
@@ -85,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         };
         swipeRefresh.setOnRefreshListener(listener);
 
-//        refresh floationg button setup
+//        refresh floating button setup
         btnRefresh = findViewById(R.id.btn_refresh);
         btnRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,10 +124,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    //重写下面的两个方法来使用自定义 toolbar 上的菜单，定义菜单的的点击事件
+    //重写下面的两个方法来使用自定义 main_toolbar 上的菜单，定义菜单的的点击事件
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar, menu);
+        getMenuInflater().inflate(R.menu.main_toolbar, menu);
         return true;
     }
 
@@ -179,6 +181,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
     private class Scanner extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -187,13 +190,20 @@ public class MainActivity extends AppCompatActivity {
             int size = scanResultList.size();
             Log.d(TAG, "onReceive: scanlist size " + size);
             nearbyWifiList.clear();
+            VendorService vendorService = VendorServiceFactory.makeVendorService(MyApplication.getContext().getResources());
+
             for (int i = 0; i < size; i++) {
                 WifiItem item = new WifiItem();
                 item.setSsid(scanResultList.get(i).SSID);
                 item.setFrequency(scanResultList.get(i).frequency);
                 item.setSignalStrengthIndB(scanResultList.get(i).level);
                 item.setCapabilities(scanResultList.get(i).capabilities);
-
+                item.setInfoMacAddress(scanResultList.get(i).BSSID);
+                item.setInfoFrequencyType(item.getFrequency() > 5000 ? "5G" : "2.4G");
+                item.setInfoFrequencyBand(String.valueOf(item.getFrequency()));
+                item.setInfoCapility(item.getCapabilities());
+                item.setInfoManufacture(vendorService.findVendorName(item.getInfoMacAddress()));
+                Log.d(TAG, "onReceive: AP signal level: " + scanResultList.get(i).level);
 //                Log.d(TAG, "onReceive: item's capabilities" + item.getCapabilities());
                 nearbyWifiList.add(item);
             }
@@ -210,6 +220,8 @@ public class MainActivity extends AppCompatActivity {
                     swipeRefresh.setRefreshing(false);
                 }
             });
+
+            Log.d(TAG, "onReceive: dfsafasdfasdfs");
 
 
         }

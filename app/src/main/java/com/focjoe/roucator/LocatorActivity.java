@@ -28,7 +28,7 @@ import java.util.List;
 
 public class LocatorActivity extends AppCompatActivity {
 
-    private static final String TAG = "WifiInfoActivity";
+    private static final String TAG = "Locator";
     Color targetColor = Color.valueOf(-13335291);
     int xTarget = 0;
     int yTarget = 0;
@@ -156,6 +156,7 @@ public class LocatorActivity extends AppCompatActivity {
 
     }
 
+
     public void initScanner() {
         wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         scanner = new Scanner();
@@ -163,6 +164,7 @@ public class LocatorActivity extends AppCompatActivity {
         registerReceiver(scanner, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
 
     }
+
 
     public double calculateDistance(WifiItem targetWifi) {
         double exp = (27.55 - (20 * Math.log10(targetWifi.getFrequency())) + Math.abs(targetWifi.getSignalStrengthIndB())) / 20.0;

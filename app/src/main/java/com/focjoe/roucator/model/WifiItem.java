@@ -7,14 +7,35 @@ public class WifiItem {
     private String capabilities;
     private int channel;
     private int percentage;
+    //attributes for info activity
+
+    private String manageUrl;
+    private String infoMacAddress;
+    private String infoFrequencyType;
+    private String infoManufacture;
+    private String infoLinkSpeed;
+    private String infoDistance;
+    private String infoCapility;
+    private String infoFrequencyBand;
+
 
     public WifiItem() {
+        this.manageUrl = "";
+        this.infoMacAddress = "infoMacAddress need implement";
+        this.infoFrequencyType = "infoFrequencyType need implement";
+        this.infoManufacture = "infoManufacture need implement";
+        this.infoLinkSpeed = "infoLinkSpeed need implement";
+        this.infoDistance = "infoDistance need implement";
+        this.infoCapility = "infoCapility need implement";
+        this.infoFrequencyBand = "infoFrequencyBand need implement";
     }
 
     public WifiItem(String ssid, int signalStrengthIndB, int frequency) {
         this.freequency = frequency;
         this.signalStrengthIndB = signalStrengthIndB;
         this.ssid = ssid;
+
+
     }
 
     public int getFrequency() {
@@ -58,6 +79,69 @@ public class WifiItem {
         return calculatePercentage(this.signalStrengthIndB);
     }
 
+    public String getManageUrl() {
+        return manageUrl;
+    }
+
+    public void setManageUrl(String manageUrl) {
+        this.manageUrl = manageUrl;
+    }
+
+    public String getInfoMacAddress() {
+        return infoMacAddress;
+    }
+
+    public void setInfoMacAddress(String infoMacAddress) {
+        this.infoMacAddress = infoMacAddress;
+    }
+
+    public String getInfoFrequencyType() {
+        return infoFrequencyType;
+    }
+
+    public void setInfoFrequencyType(String infoFrequencyType) {
+        this.infoFrequencyType = infoFrequencyType;
+    }
+
+    public String getInfoManufacture() {
+        return infoManufacture;
+    }
+
+    public void setInfoManufacture(String infoManufacture) {
+        this.infoManufacture = infoManufacture;
+    }
+
+    public String getInfoLinkSpeed() {
+        return infoLinkSpeed;
+    }
+
+    public void setInfoLinkSpeed(String infoLinkSpeed) {
+        this.infoLinkSpeed = infoLinkSpeed;
+    }
+
+    public String getInfoDistance() {
+        return infoDistance;
+    }
+
+    public void setInfoDistance(String infoDistance) {
+        this.infoDistance = infoDistance;
+    }
+
+    public String getInfoCapility() {
+        return infoCapility;
+    }
+
+    public void setInfoCapility(String infoCapility) {
+        this.infoCapility = infoCapility;
+    }
+
+    public String getInfoFrequencyBand() {
+        return infoFrequencyBand;
+    }
+
+    public void setInfoFrequencyBand(String infoFrequencyBand) {
+        this.infoFrequencyBand = infoFrequencyBand;
+    }
 
     public int calculatePercentage(int level) {
         int lev = 0;

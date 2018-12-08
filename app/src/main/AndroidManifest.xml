@@ -25,7 +25,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".LocatorActivity" />
-        <activity android:name=".WifiInfoActivity"></activity>
+        <activity android:name=".WifiInfoActivity" />
+        <activity android:name=".LogInActivity" />
+        <activity android:name=".SignUpActivity"></activity>
     </application>
 
 </manifest>

@@ -2,4 +2,14 @@
     <string name="app_name">Roucator</string>
     <string name="refresh">刷新</string>
     <string name="menu_item">菜单项</string>
+    <string name="upload">上传</string>
+    <string name="qrcode">生成二维码</string>
+    <string name="username_placeholder">FocilvJoey</string>
+    <string name="email_placeholder">focilvjoey@foxmail.com</string>
+    <string name="manage">管理</string>
+    <string name="manufacture">制造商</string>
+    <string name="link_speed">连接速度</string>
+    <string name="distance">距离</string>
+    <string name="capability">加密方式</string>
+    <string name="frequency_band">频段</string>
 </resources>
