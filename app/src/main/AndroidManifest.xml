@@ -27,7 +27,8 @@
         <activity android:name=".LocatorActivity" />
         <activity android:name=".WifiInfoActivity" />
         <activity android:name=".LogInActivity" />
-        <activity android:name=".SignUpActivity"></activity>
+        <activity android:name=".SignUpActivity" />
+        <activity android:name=".ChannelRatingActivity"></activity>
     </application>
 
 </manifest>

@@ -12,4 +12,5 @@
     <string name="distance">距离</string>
     <string name="capability">加密方式</string>
     <string name="frequency_band">频段</string>
+    <string name="channel_rating">信道评级</string>
 </resources>

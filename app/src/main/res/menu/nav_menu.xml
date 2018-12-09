@@ -6,9 +6,9 @@
             android:icon="@drawable/baseline_refresh_white_24"
             android:title="@string/menu_item" />
         <item
-            android:id="@+id/nav_item_2"
-            android:icon="@drawable/baseline_refresh_white_24"
-            android:title="@string/menu_item" />
+            android:id="@+id/nav_channel_rating"
+            android:icon="@drawable/round_star_rate_black_24"
+            android:title="@string/channel_rating" />
         <item
             android:id="@+id/nav_item_3"
             android:icon="@drawable/baseline_refresh_white_24"

@@ -11,7 +11,9 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -54,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private Toolbar toolbar;
     private FloatingActionButton btnRefresh;
+    private NavigationView navigationView;
+    private DrawerLayout drawerLayout;
 
 
     @Override
@@ -61,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        使用 main_toolbar 取代 actionbar
+        //使用 main_toolbar 取代 actionbar
         toolbar = findViewById(R.id.main_tool_bar);
         setSupportActionBar(toolbar);
 
@@ -71,12 +75,13 @@ public class MainActivity extends AppCompatActivity {
             requestPermission();
         }
 
-//        recyclerView setup
+        //recyclerView setup
         recyclerView = findViewById(R.id.listview);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(MainActivity.this);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-//        swipeRefresh setup
+
+        //swipeRefresh setup
         swipeRefresh = findViewById(R.id.swipe_refresh);
         swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
         SwipeRefreshLayout.OnRefreshListener listener = new SwipeRefreshLayout.OnRefreshListener() {
@@ -87,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
         };
         swipeRefresh.setOnRefreshListener(listener);
 
-//        refresh floating button setup
+        //refresh floating button setup
         btnRefresh = findViewById(R.id.btn_refresh);
         btnRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,13 +104,30 @@ public class MainActivity extends AppCompatActivity {
                         swipeRefresh.setRefreshing(true);
                     }
                 });
-//                initScanner();
+                //initScanner();
                 wifiManager.startScan();
             }
         });
 
+        //set up navigation view
+        drawerLayout = findViewById(R.id.main_drawer_layout);
+        navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 
-//        initial refresh
+                switch (menuItem.getItemId()) {
+                    case R.id.nav_channel_rating:
+                        Intent intent = new Intent(MainActivity.this, ChannelRatingActivity.class);
+                        startActivity(intent);
+                        break;
+                }
+                drawerLayout.closeDrawers();
+                return true;
+            }
+        });
+
+        //initial refresh
         swipeRefresh.post(new Runnable() {
             @Override
             public void run() {
@@ -204,7 +226,7 @@ public class MainActivity extends AppCompatActivity {
                 item.setInfoCapility(item.getCapabilities());
                 item.setInfoManufacture(vendorService.findVendorName(item.getInfoMacAddress()));
                 item.setInfoDistance(String.format("%.2fm", LocatorActivity.calculateDistance(item)));
-                Log.d(TAG, "onReceive: AP signal level: " + scanResultList.get(i).level);
+//                Log.d(TAG, "onReceive: AP signal level: " + scanResultList.get(i).level);
 //                Log.d(TAG, "onReceive: item's capabilities" + item.getCapabilities());
                 nearbyWifiList.add(item);
             }
@@ -223,8 +245,6 @@ public class MainActivity extends AppCompatActivity {
             });
 
             Log.d(TAG, "onReceive: dfsafasdfasdfs");
-
-
         }
     }
 
