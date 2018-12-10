@@ -49,5 +49,4 @@
 
     <include layout="@layout/nav_drawer" />
 
-
 </android.support.v4.widget.DrawerLayout>

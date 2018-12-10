@@ -1,6 +1,7 @@
 package com.focjoe.roucator.util;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Build;
 import android.support.annotation.ColorRes;
 import android.view.View;
@@ -154,6 +155,10 @@ public class Tools {
         else lev = level;
 
         return (int) (Math.abs((float) ((lev + 90) * 99 / (-60))));
+    }
+
+    public static void setUpDrawerNavigation(Context context) {
+
     }
 }
 
