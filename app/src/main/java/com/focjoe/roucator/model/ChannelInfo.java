@@ -3,7 +3,7 @@ package com.focjoe.roucator.model;
 public class ChannelInfo {
     String name;
     int number;
-    int devices;
+    int connectCount;
     int rating;
     boolean is2400;
     boolean is5000;
@@ -15,7 +15,7 @@ public class ChannelInfo {
 
     public ChannelInfo(int number) {
         this.name = "Ch." + number;
-        this.devices = 0;
+        this.connectCount = 0;
         this.rating = 10;
         this.is2400 = number < 5000;
         this.is5000 = !this.is2400;
@@ -31,7 +31,7 @@ public class ChannelInfo {
     }
 
     public void addCount() {
-        this.devices++;
+        this.connectCount++;
     }
 
     public int getNumber() {
@@ -42,12 +42,12 @@ public class ChannelInfo {
         this.number = number;
     }
 
-    public int getDevices() {
-        return devices;
+    public int getConnectCount() {
+        return connectCount;
     }
 
-    public void setDevices(int devices) {
-        this.devices = devices;
+    public void setConnectCount(int connectCount) {
+        this.connectCount = connectCount;
     }
 
     public int getRating() {
@@ -80,5 +80,15 @@ public class ChannelInfo {
 
     public void setFrequency(int frequency) {
         this.frequency = frequency;
+    }
+
+    public String getRate() {
+        String str = "";
+        int rate = 10 - this.connectCount;
+        rate = rate < 0 ? 0 : rate;
+        for (int i = 0; i < rate; i++) {
+            str += "❤";
+        }
+        return str;
     }
 }

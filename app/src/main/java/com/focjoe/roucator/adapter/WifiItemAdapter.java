@@ -32,7 +32,7 @@ public class WifiItemAdapter extends RecyclerView.Adapter<WifiItemAdapter.ViewHo
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.wifi_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_wifi_item, parent, false);
         final ViewHolder holder = new ViewHolder(view);
 
         context = view.getContext();
