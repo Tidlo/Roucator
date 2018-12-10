@@ -1,10 +1,10 @@
 package com.focjoe.roucator;
 
 import android.graphics.PorterDuff;
+import android.net.wifi.ScanResult;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -27,10 +27,10 @@ public class ChannelRatingActivity extends AppCompatActivity {
     List<ChannelInfo> channels2dot4GInfoList;
     List<ChannelInfo> channels5GInfoList;
     List<WifiItem> wifiItemList;
-    private SwipeRefreshLayout swipeRefreshLayout;
     private int[] channels2dot4G = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
     private int[] channels5G = {36, 40, 44, 48, 52, 56, 60, 64, 149, 153, 157, 161, 165};
 
+    private int[] count = new int[20];
     //views
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -90,35 +90,67 @@ public class ChannelRatingActivity extends AppCompatActivity {
     }
 
     void initLists() {
-        for (int channel :
-                channels2dot4G) {
+        for (int channel : channels2dot4G) {
             channels2dot4GInfoList.add(new ChannelInfo(channel));
         }
-        for (int channel :
-                channels5G) {
+        for (int channel : channels5G) {
             channels5GInfoList.add(new ChannelInfo(channel));
         }
+
+        Arrays.fill(count, 0);
+        //count 数组内存放了各个信道被占用的数量
+        //count[i] 的值代表信道i被使用的设备数
+        int cneterChannel;
+
+
         for (WifiItem item :
                 wifiItemList) {
+
             ChannelInfo channelInfo;
-            if (item.getFrequency() > 5000) {
-                //5G channels
-                channelInfo = channels5GInfoList.get(Arrays.binarySearch(channels5G, item.getChannel()));
-                channelInfo.addCount();
-            } else {
-                //2.4G channels
-                channelInfo = channels2dot4GInfoList.get(Arrays.binarySearch(channels2dot4G, item.getChannel()));
-                channelInfo.addCount();
+
+            switch (item.getInfoFrequencyType()) {
+                case "2.4G"://2.4G channels
+
+                    switch (item.getChannelWidth()) {
+                        case ScanResult.CHANNEL_WIDTH_20MHZ:
+                            if (item.getFrequency() == 2412) {
+                                count[1]++;
+                                count[2]++;
+                            } else if (item.getFrequency() == 2472) {
+                                count[13]++;
+                                count[12]++;
+                            } else {
+                                cneterChannel = Tools.frequencyToChannel(item.getFrequency());
+                                count[cneterChannel]++;
+                                count[cneterChannel - 1]++;
+                                count[cneterChannel + 1]++;
+                            }
+                            break;
+                        case ScanResult.CHANNEL_WIDTH_40MHZ:
+                            cneterChannel = Tools.frequencyToChannel(item.getCenterFreq0());
+                            for (int i = cneterChannel - 3 > 0 ? cneterChannel - 3 : 1; i < cneterChannel + 4; i++) {
+                                count[cneterChannel]++;
+                            }
+                            break;
+                        default:
+                            for (int i = 1; i < 14; i++) {
+                                count[i]++;
+                            }
+                    }
+//                    channelInfo = channels2dot4GInfoList.get(Arrays.binarySearch(channels2dot4G, item.getChannel()));
+//                    channelInfo.addCount();
+                    break;
+                case "5G":
+                    //5G channels
+                    channelInfo = channels5GInfoList.get(Arrays.binarySearch(channels5G, item.getChannel()));
+                    channelInfo.addCount();
+                    break;
             }
         }
-    }
-
-    private boolean is5GChannel(int channel) {
-        return Arrays.binarySearch(channels5G, channel) > -1;
-    }
-
-    private boolean is2dot4GChannel(int channel) {
-        return Arrays.binarySearch(channels2dot4G, channel) > -1;
+        for (ChannelInfo channel :
+                channels2dot4GInfoList) {
+            channel.addCount(count[channel.getNumber()]);
+        }
     }
 
     @Override
