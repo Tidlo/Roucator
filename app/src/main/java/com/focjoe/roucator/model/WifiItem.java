@@ -151,7 +151,6 @@ public class WifiItem {
             lev = -89;
         else
             lev = level;
-
         int percentge;
         percentge = (int) (Math.abs((float) ((lev + 90) * 99 / (-60))));
         return percentge;
