@@ -34,6 +34,10 @@ public class ChannelInfo {
         this.connectCount++;
     }
 
+    public void addCount(int a) {
+        this.connectCount += a;
+    }
+
     public int getNumber() {
         return number;
     }
@@ -87,7 +91,7 @@ public class ChannelInfo {
         int rate = 10 - this.connectCount;
         rate = rate < 0 ? 0 : rate;
         for (int i = 0; i < rate; i++) {
-            str += "❤";
+            str += "⭐";
         }
         return str;
     }

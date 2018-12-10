@@ -65,13 +65,13 @@ public class WifiInfoActivity extends AppCompatActivity {
 
         //set views
         textViewSsid.setText(wifiItem.getSsid());
-        textViewMacAddress.setText(wifiItem.getInfoMacAddress());
+        textViewMacAddress.setText(wifiItem.getBSSID());
         textViewFrequencyType.setText(wifiItem.getInfoFrequencyType());
         textViewManufacture.setText(wifiItem.getInfoManufacture());
         textViewLinkSpeed.setText(wifiItem.getInfoLinkSpeed());
         textViewDistance.setText(wifiItem.getInfoDistance());
         textViewCapility.setText(wifiItem.getInfoCapility());
-        textViewFrequencyBand.setText(wifiItem.getInfoFrequencyBand());
+        textViewFrequencyBand.setText(wifiItem.getInfoFrequency());
 
         buttonLocator.setOnClickListener(new View.OnClickListener() {
             @Override

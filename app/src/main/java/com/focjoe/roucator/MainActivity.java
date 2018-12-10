@@ -214,20 +214,26 @@ public class MainActivity extends AppCompatActivity {
             nearbyWifiList.clear();
             VendorService vendorService = VendorServiceFactory.makeVendorService(MyApplication.getContext().getResources());
 
+            ScanResult result;
             for (int i = 0; i < size; i++) {
-                WifiItem item = new WifiItem();
-                item.setSsid(scanResultList.get(i).SSID);
-                item.setFrequency(scanResultList.get(i).frequency);
-                item.setSignalStrengthIndB(scanResultList.get(i).level);
-                item.setCapabilities(scanResultList.get(i).capabilities);
-                item.setInfoMacAddress(scanResultList.get(i).BSSID);
+                Log.d(TAG, "onReceive: ++++++++++informations++++++++++++++++++");
+                Log.d(TAG, "onReceive: BSSID:" + scanResultList.get(i).BSSID);
+                Log.d(TAG, "onReceive: SSID:" + scanResultList.get(i).SSID);
+                Log.d(TAG, "onReceive: centerfreq0:" + String.valueOf(scanResultList.get(i).centerFreq0));
+                Log.d(TAG, "onReceive: centerfreq1:" + String.valueOf(scanResultList.get(i).centerFreq1));
+                Log.d(TAG, "onReceive: frequency:" + String.valueOf(scanResultList.get(i).frequency));
+                Log.d(TAG, "onReceive: operator friendly name:" + scanResultList.get(i).operatorFriendlyName);
+                Log.d(TAG, "onReceive: channel width:" + scanResultList.get(i).channelWidth);
+
+                result = scanResultList.get(i);
+
+                WifiItem item = new WifiItem(result.SSID, result.BSSID, result.capabilities,
+                        result.frequency, result.centerFreq0, result.centerFreq1, result.channelWidth, result.level);
+
                 item.setInfoFrequencyType(item.getFrequency() > 5000 ? "5G" : "2.4G");
-                item.setInfoFrequencyBand(String.valueOf(item.getFrequency()));
-                item.setInfoCapility(item.getCapabilities());
-                item.setInfoManufacture(vendorService.findVendorName(item.getInfoMacAddress()));
+                item.setInfoManufacture(vendorService.findVendorName(item.getBSSID()));
                 item.setInfoDistance(String.format("%.2fm", LocatorActivity.calculateDistance(item)));
-//                Log.d(TAG, "onReceive: AP signal level: " + scanResultList.get(i).level);
-//                Log.d(TAG, "onReceive: item's capabilities" + item.getCapabilities());
+
                 nearbyWifiList.add(item);
             }
 
@@ -236,7 +242,8 @@ public class MainActivity extends AppCompatActivity {
             WifiItemAdapter wifiItemAdapter = new WifiItemAdapter(nearbyWifiList);
             recyclerView.setAdapter(wifiItemAdapter);
             wifiItemAdapter.notifyDataSetChanged();
-//            recyclerView 加载完毕后关闭刷新动画
+
+            //recyclerView 加载完毕后关闭刷新动画
             swipeRefresh.post(new Runnable() {
                 @Override
                 public void run() {

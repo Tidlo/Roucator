@@ -47,14 +47,6 @@
 
     </FrameLayout>
 
-    <!-- The navigation drawer -->
-    <android.support.design.widget.NavigationView
-        android:id="@+id/nav_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        app:menu="@menu/nav_menu"
-        app:headerLayout="@layout/nav_header" />
-
+    <include layout="@layout/nav_drawer" />
 
 </android.support.v4.widget.DrawerLayout>
