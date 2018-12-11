@@ -9,7 +9,6 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
 
-
     <application
         android:name=".util.MyApplication"
         android:allowBackup="true"
@@ -31,7 +30,8 @@
         <activity android:name=".LogInActivity" />
         <activity android:name=".SignUpActivity" />
         <activity android:name=".ChannelRatingActivity" />
-        <activity android:name=".QRCodeScanActivity"></activity>
+        <activity android:name=".QRCodeScanActivity" />
+        <activity android:name=".QRCodeGenerateActivity"></activity>
     </application>
 
 </manifest>

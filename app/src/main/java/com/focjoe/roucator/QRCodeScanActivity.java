@@ -122,8 +122,23 @@ public class QRCodeScanActivity extends AppCompatActivity implements ZXingScanne
         }
 
         WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-        wifiManager.addNetwork(conf);
+
         List<WifiConfiguration> list = wifiManager.getConfiguredNetworks();
+
+        // check whether already have the same-name configuration
+        for (WifiConfiguration i : list) {
+
+            if (i.SSID != null && i.SSID.equals("\"" + networkSSID + "\"")) {
+                Log.d(TAG, "connectToWifi: Found_Exist_Wificonfig_ssid:" + i.SSID);
+                wifiManager.removeNetwork(i.networkId);
+                break;
+            }
+        }
+
+
+        wifiManager.addNetwork(conf);
+        list = wifiManager.getConfiguredNetworks();
+
         for (WifiConfiguration i : list) {
             Log.d(TAG, "connectToWifi: Wificonfig_ssid:" + i.SSID);
             if (i.SSID != null && i.SSID.equals("\"" + networkSSID + "\"")) {

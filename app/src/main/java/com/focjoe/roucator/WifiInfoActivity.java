@@ -107,12 +107,14 @@ public class WifiInfoActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
         switch (item.getItemId()) {
             case R.id.toolbar_menu_upload:
                 Toast.makeText(this, "You clicked upload", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.toolbar_menu_qr_code:
-                Toast.makeText(this, "You clicked generate qrcode", Toast.LENGTH_SHORT).show();
+                intent = new Intent(WifiInfoActivity.this, QRCodeGenerateActivity.class);
+                startActivity(intent);
                 break;
             default:
                 break;
