@@ -25,7 +25,7 @@ public class WifiInfoActivity extends AppCompatActivity {
     private TextView textViewFrequencyType;
 
     private TextView textViewManufacture;
-    private TextView textViewLinkSpeed;
+    private TextView textViewLinkChannel;
     private TextView textViewDistance;
     private TextView textViewCapility;
     private TextView textViewFrequencyBand;
@@ -55,7 +55,7 @@ public class WifiInfoActivity extends AppCompatActivity {
         textViewMacAddress = findViewById(R.id.info_mac_address);
         textViewFrequencyType = findViewById(R.id.info_frequency_type);
         textViewManufacture = findViewById(R.id.info_manufacture);
-        textViewLinkSpeed = findViewById(R.id.info_link_speed);
+        textViewLinkChannel = findViewById(R.id.info_link_channel);
         textViewDistance = findViewById(R.id.info_distance);
         textViewCapility = findViewById(R.id.info_capability);
         textViewFrequencyBand = findViewById(R.id.info_frequency_band);
@@ -68,7 +68,7 @@ public class WifiInfoActivity extends AppCompatActivity {
         textViewMacAddress.setText(wifiItem.getBSSID());
         textViewFrequencyType.setText(wifiItem.getInfoFrequencyType());
         textViewManufacture.setText(wifiItem.getInfoManufacture());
-        textViewLinkSpeed.setText(wifiItem.getInfoLinkSpeed());
+        textViewLinkChannel.setText(String.valueOf(wifiItem.getChannel()));
         textViewDistance.setText(wifiItem.getInfoDistance());
         textViewCapility.setText(wifiItem.getInfoCapility());
         textViewFrequencyBand.setText(wifiItem.getInfoFrequency());
@@ -107,12 +107,14 @@ public class WifiInfoActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
         switch (item.getItemId()) {
             case R.id.toolbar_menu_upload:
                 Toast.makeText(this, "You clicked upload", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.toolbar_menu_qr_code:
-                Toast.makeText(this, "You clicked generate qrcode", Toast.LENGTH_SHORT).show();
+                intent = new Intent(WifiInfoActivity.this, QRCodeGenerateActivity.class);
+                startActivity(intent);
                 break;
             default:
                 break;

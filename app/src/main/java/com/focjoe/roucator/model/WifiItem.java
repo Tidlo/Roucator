@@ -14,10 +14,11 @@ public class WifiItem {
     private int channelWidth;
     private int level;
 
+    private boolean configured;
 
     private int percentage;
-    //attributes for info activity
 
+    //attributes for info activity
     private String manageUrl;
     private String infoFrequencyType;
     private String infoManufacture;
@@ -147,7 +148,7 @@ public class WifiItem {
     }
 
     public String getInfoCapility() {
-        return infoCapility;
+        return capabilities;
     }
 
     public void setInfoCapility(String infoCapility) {
@@ -198,4 +199,11 @@ public class WifiItem {
         this.level = level;
     }
 
+    public boolean isConfigured() {
+        return configured;
+    }
+
+    public void setConfigured(boolean configured) {
+        this.configured = configured;
+    }
 }

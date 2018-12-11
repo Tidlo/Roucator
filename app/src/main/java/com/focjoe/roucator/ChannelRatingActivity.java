@@ -1,18 +1,13 @@
 package com.focjoe.roucator;
 
-import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.net.wifi.ScanResult;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.MenuItem;
 
 import com.focjoe.roucator.adapter.SectionsPagerAdapter;
 import com.focjoe.roucator.fragments.ChannelRatingFragment;
@@ -47,26 +42,6 @@ public class ChannelRatingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_channel_rating);
 
         initToolbar();
-        //init drawer
-        //set up navigation view
-        final DrawerLayout drawerLayout = findViewById(R.id.main_drawer_layout);
-        final NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-
-                switch (menuItem.getItemId()) {
-                    case R.id.nav_channel_rating:
-                        Intent intent = new Intent(MyApplication.getContext(), ChannelRatingActivity.class);
-                        startActivity(intent);
-                        break;
-                }
-                drawerLayout.closeDrawers();
-                return true;
-            }
-        });
-
-
         wifiItemList = MyApplication.getWifiItemList();
 
         channels2dot4GInfoList = new ArrayList<>();

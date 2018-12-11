@@ -127,7 +127,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/link_speed" />
+                        android:text="@string/link_channel" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -161,7 +161,7 @@
                         android:layout_height="wrap_content" />
 
                     <TextView
-                        android:id="@+id/info_link_speed"
+                        android:id="@+id/info_link_channel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
 
