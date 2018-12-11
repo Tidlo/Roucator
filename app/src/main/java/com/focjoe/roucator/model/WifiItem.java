@@ -14,8 +14,9 @@ public class WifiItem {
     private int channelWidth;
     private int level;
 
+    //showed in card
     private boolean configured;
-
+    private boolean saved;
     private int percentage;
 
     //attributes for info activity
@@ -49,6 +50,7 @@ public class WifiItem {
         this.centerFreq1 = centerFreq1;
         this.channelWidth = channelWidth;
         this.level = level;
+        this.saved = false;
 
         this.manageUrl = "http://192.168.1.1";
         this.infoFrequencyType = "infoFrequencyType need implement";
@@ -205,5 +207,13 @@ public class WifiItem {
 
     public void setConfigured(boolean configured) {
         this.configured = configured;
+    }
+
+    public boolean isSaved() {
+        return saved;
+    }
+
+    public void setSaved(boolean saved) {
+        this.saved = saved;
     }
 }
