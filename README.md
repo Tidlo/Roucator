@@ -7,7 +7,7 @@ Router locator. Envolving to be the best Wi-fi kit.
 - [x] 路由器定位
 - [x] 显示制造商
 - [x] 进入管理页面
-- [ ] 信道评级
+- [x] 信道评级
 - [ ] 信道图
 - [ ] 记住密码
 - [ ] 密码自动填充
