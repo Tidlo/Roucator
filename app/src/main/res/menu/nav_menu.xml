@@ -13,5 +13,9 @@
             android:id="@+id/nav_scan_qr_code"
             android:icon="@drawable/baseline_refresh_white_24"
             android:title="@string/scan_qr_code" />
+        <item
+            android:id="@+id/nav_generate_qr_code"
+            android:icon="@drawable/baseline_refresh_white_24"
+            android:title="@string/generate_qr_code" />
     </group>
 </menu>

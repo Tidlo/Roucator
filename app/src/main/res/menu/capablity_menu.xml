@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/capability_none"
+        android:title="@string/none" />
+    <item
+        android:id="@+id/capability_wep"
+        android:title="@string/wep" />
+    <item
+        android:id="@+id/capability_wpa"
+        android:title="@string/wpa" />
+</menu>

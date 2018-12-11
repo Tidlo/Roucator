@@ -1,11 +1,9 @@
 package com.focjoe.roucator;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.google.zxing.BarcodeFormat;
@@ -29,17 +27,14 @@ public class QRCodeGenerateActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qrcode_generate);
-        imageView = (ImageView) findViewById(R.id.imgQRCode);
-        EditText editText = (EditText) findViewById(R.id.txtQRCode);
-        Button btn_reader = (Button) findViewById(R.id.btn_reader);
-        assert btn_reader != null;
-        btn_reader.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            }
-        });
+        imageView = findViewById(R.id.imgQRCode);
 
 
+        Intent intent = getIntent();
+        String type = intent.getStringExtra("type");
+        String ssid = intent.getStringExtra("ssid");
+        String password = intent.getStringExtra("password");
+        boolean hidden = intent.getBooleanExtra("hidden", false);
 
         /*Parameter	Example	Description
             T	WPA 	Authentication type; can be WEP or WPA, or 'nopass' for no password. Or, omit for no password.
@@ -48,8 +43,7 @@ public class QRCodeGenerateActivity extends AppCompatActivity {
             H	true	Optional. True if the network SSID is hidden.
         * */
 
-//        String wifi =encodeQRCodeWifi("WPA","shoniz","PassPass",false);
-        String wifi = encodeQRCodeWifi("nopass", "GUET-Student", "", false);
+        String wifi = encodeQRCodeWifi(type, ssid, password, hidden);
 
 
         try {
@@ -58,26 +52,6 @@ public class QRCodeGenerateActivity extends AppCompatActivity {
         } catch (WriterException e) {
             e.printStackTrace();
         }
-
-        assert editText != null;
-//        editText.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//
-//
-//
-//            }
-//        });
     }
 
     private String encodeQRCodeWifi(String type, String ssid, String pass, boolean hidden) {

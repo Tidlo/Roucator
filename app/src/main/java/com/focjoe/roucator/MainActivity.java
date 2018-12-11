@@ -1,8 +1,10 @@
 package com.focjoe.roucator;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -16,14 +18,20 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.focjoe.roucator.adapter.WifiItemAdapter;
@@ -127,6 +135,9 @@ public class MainActivity extends AppCompatActivity {
                         intent = new Intent(MainActivity.this, QRCodeScanActivity.class);
                         startActivity(intent);
                         break;
+                    case R.id.nav_generate_qr_code:
+                        generateQRCode();
+                        break;
                 }
                 drawerLayout.closeDrawers();
                 return true;
@@ -141,6 +152,112 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         listener.onRefresh();
+    }
+
+    private void generateQRCode() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        Dialog dialog;
+        builder.setTitle(R.string.select_data_source)
+                .setCancelable(true)
+                .setPositiveButton(R.string.manual_input, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog = buildInputDialog();
+                        ((Dialog) dialog).show();
+                    }
+                })
+                .setNegativeButton(R.string.select_from_exist, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog = buildSelectDialog();
+                        ((Dialog) dialog).show();
+
+                    }
+                }).show();
+    }
+
+    private Dialog buildSelectDialog() {
+        LayoutInflater inflater = getLayoutInflater();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View view = inflater.inflate(R.layout.dialog_input, null);
+
+//        final EditText et_name = view.findViewById(R.id.input_name);
+//        final EditText et_tel = view.findViewById(R.id.input_tel);
+//        final EditText et_age = view.findViewById(R.id.input_age);
+        builder.setView(view)
+                .setCancelable(false)
+                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .setTitle(R.string.select);
+        return builder.create();
+    }
+
+    private Dialog buildInputDialog() {
+        LayoutInflater inflater = getLayoutInflater();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View view = inflater.inflate(R.layout.dialog_input, null);
+        final EditText editTextSSID = view.findViewById(R.id.et_ssid);
+        final EditText editTextPass = view.findViewById(R.id.et_password);
+        final TextView textViewType = view.findViewById(R.id.et_capability);
+        final ImageButton dropdown = view.findViewById(R.id.btn_capability_dropdown);
+
+        final String[] selectedType = {"nopass"};
+
+        dropdown.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popup = new PopupMenu(MainActivity.this, dropdown);
+                //Inflating the Popup using xml file
+                popup.getMenuInflater().inflate(R.menu.capablity_menu, popup.getMenu());
+
+                //registering popup with OnMenuItemClickListener
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.capability_none:
+                                textViewType.setText(R.string.none);
+                                selectedType[0] = "nopass";
+                                break;
+                            case R.id.capability_wep:
+                                textViewType.setText(R.string.wep);
+                                selectedType[0] = "WEP";
+                                break;
+                            case R.id.capability_wpa:
+                                textViewType.setText(R.string.wpa);
+                                selectedType[0] = "WPA";
+                                break;
+                        }
+                        return true;
+                    }
+                });
+
+                popup.show();//showing popup menu
+            }
+        });
+
+        builder.setView(view)
+                .setCancelable(false)
+                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String ssid = editTextSSID.getText().toString();
+                        String pass = editTextPass.getText().toString();
+                        Intent intent = new Intent(MainActivity.this, QRCodeGenerateActivity.class);
+                        intent.putExtra("type", selectedType[0]);
+                        intent.putExtra("ssid", ssid);
+                        intent.putExtra("password", pass);
+                        startActivity(intent);
+
+                    }
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .setTitle(R.string.input_information);
+        return builder.create();
     }
 
     public void initScanner() {
