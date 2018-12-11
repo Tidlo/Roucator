@@ -65,6 +65,7 @@ public class WifiItemAdapter extends RecyclerView.Adapter<WifiItemAdapter.ViewHo
         holder.strength.setText(String.format("%d dBm", wifiItem.getSignalStrengthIndB()));
         holder.capability.setText(wifiItem.getCapabilities());
         holder.channel.setText(String.format("CH %d", wifiItem.getChannel()));
+        holder.configured.setText(wifiItem.isConfigured() ? "configured" : "not configured");
 
         int percentage = wifiItem.getPercentage();
         if (percentage < 25) {
@@ -91,6 +92,7 @@ public class WifiItemAdapter extends RecyclerView.Adapter<WifiItemAdapter.ViewHo
         TextView strength;
         TextView capability;
         TextView channel;
+        TextView configured;
         ImageView signalBar;
 
         public ViewHolder(View view) {
@@ -102,6 +104,7 @@ public class WifiItemAdapter extends RecyclerView.Adapter<WifiItemAdapter.ViewHo
             capability = view.findViewById(R.id.wifi_capability);
             channel = view.findViewById(R.id.wifi_channel);
             signalBar = view.findViewById(R.id.wifi_signal_bar);
+            configured = view.findViewById(R.id.wifi_configured);
         }
     }
 

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.net.wifi.ScanResult;
+import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private WifiManager wifiManager;
     private List<WifiItem> nearbyWifiList = new ArrayList<>();
     private List<ScanResult> scanResultList;
+    private List<WifiConfiguration> wifiConfigurationList;
     private Scanner scanner;
 
     //    views
@@ -115,10 +117,14 @@ public class MainActivity extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-
+                Intent intent;
                 switch (menuItem.getItemId()) {
                     case R.id.nav_channel_rating:
-                        Intent intent = new Intent(MainActivity.this, ChannelRatingActivity.class);
+                        intent = new Intent(MainActivity.this, ChannelRatingActivity.class);
+                        startActivity(intent);
+                        break;
+                    case R.id.nav_scan_qr_code:
+                        intent = new Intent(MainActivity.this, QRCodeScanActivity.class);
                         startActivity(intent);
                         break;
                 }
@@ -203,12 +209,24 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private boolean checkConfigured(WifiItem item) {
+        String ssid = item.getSsid();
+        for (WifiConfiguration i : wifiConfigurationList) {
+            if (i.SSID != null && i.SSID.equals("\"" + ssid + "\"")) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     private class Scanner extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.d(TAG, "onReceive: Start.");
+
             scanResultList = wifiManager.getScanResults();
+            wifiConfigurationList = wifiManager.getConfiguredNetworks();
+
             int size = scanResultList.size();
             Log.d(TAG, "onReceive: scanlist size " + size);
             nearbyWifiList.clear();
@@ -233,7 +251,7 @@ public class MainActivity extends AppCompatActivity {
                 item.setInfoFrequencyType(item.getFrequency() > 5000 ? "5G" : "2.4G");
                 item.setInfoManufacture(vendorService.findVendorName(item.getBSSID()));
                 item.setInfoDistance(String.format("%.2fm", LocatorActivity.calculateDistance(item)));
-
+                item.setConfigured(checkConfigured(item));
                 nearbyWifiList.add(item);
             }
 
