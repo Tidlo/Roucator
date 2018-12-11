@@ -23,6 +23,7 @@
         android:text="@string/capability" />
 
     <LinearLayout
+        android:id="@+id/layout_capability"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -36,6 +37,7 @@
 
         <ImageButton
             android:id="@+id/btn_capability_dropdown"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/round_arrow_drop_down_black_24" />

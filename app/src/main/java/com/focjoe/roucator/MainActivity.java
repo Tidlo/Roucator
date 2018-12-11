@@ -31,6 +31,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -156,7 +157,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void generateQRCode() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        Dialog dialog;
         builder.setTitle(R.string.select_data_source)
                 .setCancelable(true)
                 .setPositiveButton(R.string.manual_input, new DialogInterface.OnClickListener() {
@@ -205,6 +205,7 @@ public class MainActivity extends AppCompatActivity {
         final EditText editTextPass = view.findViewById(R.id.et_password);
         final TextView textViewType = view.findViewById(R.id.et_capability);
         final ImageButton dropdown = view.findViewById(R.id.btn_capability_dropdown);
+        LinearLayout layout = view.findViewById(R.id.layout_capability);
 
         final String[] selectedType = {"nopass"};
 
@@ -237,6 +238,14 @@ public class MainActivity extends AppCompatActivity {
                 });
 
                 popup.show();//showing popup menu
+            }
+        });
+
+        //set onclick listener for the whole line to popup a menu.
+        layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dropdown.callOnClick();
             }
         });
 
