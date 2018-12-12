@@ -31,12 +31,15 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -207,16 +210,12 @@ public class MainActivity extends AppCompatActivity {
         LayoutInflater inflater = getLayoutInflater();
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View view = inflater.inflate(R.layout.dialog_input, null);
-
-//        final EditText et_name = view.findViewById(R.id.input_name);
-//        final EditText et_tel = view.findViewById(R.id.input_tel);
-//        final EditText et_age = view.findViewById(R.id.input_age);
         builder.setView(view)
                 .setCancelable(false)
                 .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
+                        // TODO: 2018/12/12 show stored items
                     }
                 })
                 .setNegativeButton(R.string.cancel, null)
@@ -232,6 +231,7 @@ public class MainActivity extends AppCompatActivity {
         final EditText editTextPass = view.findViewById(R.id.et_password);
         final TextView textViewType = view.findViewById(R.id.et_capability);
         final ImageButton dropdown = view.findViewById(R.id.btn_capability_dropdown);
+        final CheckBox checkBox = view.findViewById(R.id.checkBox_show_password);
         LinearLayout layout = view.findViewById(R.id.layout_capability);
 
         final String[] selectedType = {"nopass"};
@@ -276,6 +276,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //set check listener for check box
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    editTextPass.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                } else {
+                    editTextPass.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                }
+            }
+        });
+
+        //set onclick listener for buttons
         builder.setView(view)
                 .setCancelable(false)
                 .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {

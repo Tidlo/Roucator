@@ -61,10 +61,6 @@ public class WifiItemAdapter extends RecyclerView.Adapter<WifiItemAdapter.ViewHo
         WifiItem wifiItem = wifiItems.get(position);
 
         holder.ssid.setText(wifiItem.getSsid());
-//        holder.frequency.setText(String.format("%d MHz", wifiItem.getFrequency()));
-//        holder.strength.setText(String.format("%d dBm", wifiItem.getSignalStrengthIndB()));
-//        holder.capability.setText(wifiItem.getCapabilities());
-//        holder.channel.setText(String.format("CH %d", wifiItem.getChannel()));
 
         if (wifiItem.isConfigured()) {
             holder.configured.setImageResource(R.drawable.round_lock_open_black_36);
@@ -103,10 +99,6 @@ public class WifiItemAdapter extends RecyclerView.Adapter<WifiItemAdapter.ViewHo
         TextView ssid;
         TextView mac;
 
-        //        TextView frequency;
-//        TextView strength;
-//        TextView capability;
-//        TextView channel;
         ImageView configured;
         ImageView signalBar;
 
@@ -119,10 +111,7 @@ public class WifiItemAdapter extends RecyclerView.Adapter<WifiItemAdapter.ViewHo
             super(view);
             itemView = view;
             ssid = view.findViewById(R.id.wifi_ssid);
-//            frequency = view.findViewById(R.id.wifi_freq);
-//            strength = view.findViewById(R.id.wifi_strength);
-//            capability = view.findViewById(R.id.wifi_capability);
-//            channel = view.findViewById(R.id.wifi_channel);
+
             freqIcon = view.findViewById(R.id.wifi_token);
             mac = view.findViewById(R.id.wifi_mac);
             signalBar = view.findViewById(R.id.wifi_signal_bar);

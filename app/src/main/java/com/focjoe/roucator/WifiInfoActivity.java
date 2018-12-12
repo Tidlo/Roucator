@@ -20,14 +20,18 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,7 +53,11 @@ public class WifiInfoActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private TextView textViewSsid;
     private TextView textViewMacAddress;
-    private TextView textViewFrequencyType;
+    private ImageView configured;
+    private ImageView signalBar;
+
+    private ImageView freqIcon;
+    private ImageView savedIcon;
 
     private TextView textViewManufacture;
     private TextView textViewLinkChannel;
@@ -77,7 +85,7 @@ public class WifiInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wifi_info);
 
-        //使用 info_toolbar 取代 actionbar
+        //use info_toolbar replace actionbar
         toolbar = findViewById(R.id.info_tool_bar);
         setSupportActionBar(toolbar);
 
@@ -85,9 +93,14 @@ public class WifiInfoActivity extends AppCompatActivity {
         wifiItem = MyApplication.getWifiItemList().get(wifiItemIndex);
 
         //init views
-        textViewSsid = findViewById(R.id.info_ssid);
-        textViewMacAddress = findViewById(R.id.info_mac_address);
-        textViewFrequencyType = findViewById(R.id.info_frequency_type);
+        textViewSsid = findViewById(R.id.info_wifi_ssid);
+        textViewMacAddress = findViewById(R.id.info_wifi_mac);
+
+        freqIcon = findViewById(R.id.info_wifi_token);
+        signalBar = findViewById(R.id.info_wifi_signal_bar);
+        configured = findViewById(R.id.info_wifi_configured);
+        savedIcon = findViewById(R.id.info_wifi_saved);
+
         textViewManufacture = findViewById(R.id.info_manufacture);
         textViewLinkChannel = findViewById(R.id.info_link_channel);
         textViewDistance = findViewById(R.id.info_distance);
@@ -100,9 +113,32 @@ public class WifiInfoActivity extends AppCompatActivity {
         fabRefresh = findViewById(R.id.btn_refresh_info);
 
         //set views
+        if (wifiItem.isConfigured()) {
+            configured.setImageResource(R.drawable.round_lock_open_black_36);
+        }
+
+        if (wifiItem.isSaved()) {
+            savedIcon.setImageResource(R.drawable.round_save_black_36);
+        }
+
+        if (wifiItem.getInfoFrequencyType().equals("5G")) {
+            freqIcon.setImageResource(R.drawable.m5g_token);
+        }
+
+        int percentage = wifiItem.getPercentage();
+        if (percentage < 25) {
+            signalBar.setImageResource(R.drawable.round_signal_wifi_1_bar_black_48);
+        } else if (percentage < 50) {
+            signalBar.setImageResource(R.drawable.round_signal_wifi_2_bar_black_48);
+        } else if (percentage < 75) {
+            signalBar.setImageResource(R.drawable.round_signal_wifi_3_bar_black_48);
+        } else {
+            signalBar.setImageResource(R.drawable.round_signal_wifi_4_bar_black_48);
+        }
+
+
         textViewSsid.setText(wifiItem.getSsid());
         textViewMacAddress.setText(wifiItem.getBSSID());
-        textViewFrequencyType.setText(wifiItem.getInfoFrequencyType());
         textViewManufacture.setText(wifiItem.getInfoManufacture());
         textViewLinkChannel.setText(String.valueOf(wifiItem.getChannel()));
         textViewDistance.setText(wifiItem.getInfoDistance());
@@ -142,12 +178,14 @@ public class WifiInfoActivity extends AppCompatActivity {
                     String type = cursor.getString(2);
                     String pass = cursor.getString(3);
 
+                    // if successful configured network
                     if (configSucceed(type, ssid, pass)) {
                         sendNotification(ssid);
                         MyApplication.getWifiItemList().get(wifiItemIndex).setConnected(true);
                         int curCon = MyApplication.currentConnectedWifiIndex[0];
                         MyApplication.getWifiItemList().get(curCon).setConnected(false);
                     } else {
+                        // local record is not match.
                         AlertDialog.Builder builder = new AlertDialog.Builder(WifiInfoActivity.this);
                         builder.setTitle(R.string.connect_fail)
                                 .setMessage("此无线网络的认证方式可能已发生改变，是否删除本地已保存的WiFi记录")
@@ -171,11 +209,12 @@ public class WifiInfoActivity extends AppCompatActivity {
         });
 
 
+        // a simple implement, need to establish a database to store all vendors manage url.
         buttonManage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("https://www.baidu.com"));
+                intent.setData(Uri.parse(wifiItem.getManageUrl()));
                 startActivity(intent);
             }
         });
@@ -193,6 +232,11 @@ public class WifiInfoActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * This dialog shows up when there is no information saved locally for the wifi connected to.
+     *
+     * @return
+     */
     private Dialog buildInputDialog() {
         LayoutInflater inflater = getLayoutInflater();
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -202,6 +246,8 @@ public class WifiInfoActivity extends AppCompatActivity {
         final TextView textViewType = view.findViewById(R.id.et_capability);
         final ImageButton dropdown = view.findViewById(R.id.btn_capability_dropdown);
         LinearLayout layout = view.findViewById(R.id.layout_capability);
+        final CheckBox checkBox = view.findViewById(R.id.checkBox_show_password);
+
 
         final String[] selectedType = {"nopass"};
 
@@ -245,6 +291,19 @@ public class WifiInfoActivity extends AppCompatActivity {
             }
         });
 
+        //set check listener for check box
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    editTextPass.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                } else {
+                    editTextPass.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                }
+            }
+        });
+
+        //set onclick listener for buttons
         builder.setView(view)
                 .setCancelable(false)
                 .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
@@ -271,6 +330,12 @@ public class WifiInfoActivity extends AppCompatActivity {
         return builder.create();
     }
 
+    /**
+     * show a dialog to confirm whether save the wifi information to local data base.
+     * @param type
+     * @param ssid
+     * @param pass
+     */
     private void showSaveToLocalDialog(final String type, final String ssid, final String pass) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.save_to_local)
@@ -286,6 +351,13 @@ public class WifiInfoActivity extends AppCompatActivity {
                 .show();
     }
 
+    /**
+     * configure a wifi and return result
+     * @param type
+     * @param networkSSID
+     * @param networkPass
+     * @return true when success
+     */
     private boolean configSucceed(String type, String networkSSID, String networkPass) {
         WifiConfiguration conf = new WifiConfiguration();
         conf.SSID = "\"" + networkSSID + "\"";   // Please note the quo
@@ -313,6 +385,10 @@ public class WifiInfoActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Send notification when successful connected to ssid
+     * @param ssid
+     */
     private void sendNotification(String ssid) {
         NotificationCompat.Builder notifyBuilder = new NotificationCompat.Builder(this, CHANNEL_ID);
         notifyBuilder.setContentTitle("Roucator")
@@ -363,9 +439,19 @@ public class WifiInfoActivity extends AppCompatActivity {
             for (ScanResult result :
                     scanResultList) {
                 if (result.BSSID.equals(wifiItem.getBSSID())) {
-                    // TODO: 2018/12/12 Update UI
                     wifiItem = new WifiItem(result.SSID, result.BSSID, result.capabilities,
                             result.frequency, result.centerFreq0, result.centerFreq1, result.channelWidth, result.level);
+
+                    int percentage = wifiItem.getPercentage();
+                    if (percentage < 25) {
+                        signalBar.setImageResource(R.drawable.round_signal_wifi_1_bar_black_48);
+                    } else if (percentage < 50) {
+                        signalBar.setImageResource(R.drawable.round_signal_wifi_2_bar_black_48);
+                    } else if (percentage < 75) {
+                        signalBar.setImageResource(R.drawable.round_signal_wifi_3_bar_black_48);
+                    } else {
+                        signalBar.setImageResource(R.drawable.round_signal_wifi_4_bar_black_48);
+                    }
 
                     textViewLinkChannel.setText(String.valueOf(wifiItem.getChannel()));
                     textViewDistance.setText(String.format("%.2fm", LocatorActivity.calculateDistance(wifiItem)));

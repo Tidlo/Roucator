@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#32344f</color>
+    <color name="colorPrimary">#2a2b41</color>
     <color name="colorPrimaryDark">#2a2c45</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorAccent">#0097a7</color>
     <color name="linked_wifi_background_color">#1565c0</color>
 
     <!--material colors-->
