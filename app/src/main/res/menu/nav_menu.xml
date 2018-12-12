@@ -3,7 +3,7 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_nearby_wfi"
-            android:icon="@drawable/baseline_refresh_white_24"
+            android:icon="@drawable/round_near_me_black_36"
             android:title="@string/nearby_wifi" />
         <item
             android:id="@+id/nav_channel_rating"
@@ -15,7 +15,7 @@
             android:title="@string/scan_qr_code" />
         <item
             android:id="@+id/nav_generate_qr_code"
-            android:icon="@drawable/baseline_refresh_white_24"
+            android:icon="@drawable/qr_code"
             android:title="@string/generate_qr_code" />
     </group>
 </menu>
