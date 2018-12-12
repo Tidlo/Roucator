@@ -34,4 +34,13 @@
     <string name="wpa">WPA/WPA2 PSK</string>
     <string name="wifi_name">网络名称</string>
     <string name="password">密码</string>
+    <string name="connect">连接</string>
+    <string name="connect_fail">连接失败</string>
+    <string name="please_retry">请重试</string>
+    <string name="save_to_local">保存到本地</string>
+    <string name="would_you_save_to_local">要将此WiFi信息存在本地吗？</string>
+    <string name="update">更新</string>
+    <string name="show_password">显示密码</string>
+    <string name="navigation_drawer_open">开启侧边菜单</string>
+    <string name="navigation_drawer_close">关闭侧边菜单</string>
 </resources>

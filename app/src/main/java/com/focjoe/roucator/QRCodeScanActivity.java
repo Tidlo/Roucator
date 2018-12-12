@@ -1,33 +1,30 @@
 package com.focjoe.roucator;
 
 import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.focjoe.roucator.util.MyApplication;
 import com.google.zxing.Result;
 
 import java.util.List;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
+import static com.focjoe.roucator.util.MyApplication.CHANNEL_ID;
+
 
 public class QRCodeScanActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler {
-
-    private static final String CHANNEL_ID = "channel_0";
-    private static final int NOTIFICATION_ID = 0;
     String TAG = "ZXING";
-    NotificationManager notificationManager;
+
     private ZXingScannerView mScannerView;
 
     @Override
@@ -35,20 +32,8 @@ public class QRCodeScanActivity extends AppCompatActivity implements ZXingScanne
         super.onCreate(savedInstanceState);
         mScannerView = new ZXingScannerView(this);   // Programmatically initialize the scanner view
         setContentView(mScannerView);
-        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
-        //create notification channel
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
-                    "Channel1", NotificationManager.IMPORTANCE_HIGH);
-
-            channel.enableLights(true);
-            channel.setLightColor(Color.GREEN);
-            channel.setShowBadge(true);
-
-            notificationManager.createNotificationChannel(channel);
-        }
     }
 
     @Override
@@ -88,9 +73,11 @@ public class QRCodeScanActivity extends AppCompatActivity implements ZXingScanne
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        connectToWifi(type, ssid, pass);
-                        // TODO: 2018/12/11 notification of connected wifi
-                        sendNotification(ssid);
+                        if (connectToWifi(type, ssid, pass)) {
+                            sendNotification(ssid);
+                        } else {
+                            Toast.makeText(QRCodeScanActivity.this, R.string.connect_fail, Toast.LENGTH_SHORT).show();
+                        }
 
                         finish();
                     }
@@ -106,7 +93,7 @@ public class QRCodeScanActivity extends AppCompatActivity implements ZXingScanne
 //        mScannerView.resumeCameraPreview(this);
     }
 
-    public void connectToWifi(String type, String networkSSID, String networkPass) {
+    public boolean connectToWifi(String type, String networkSSID, String networkPass) {
 
         WifiConfiguration conf = new WifiConfiguration();
         conf.SSID = "\"" + networkSSID + "\"";   // Please note the quo
@@ -135,19 +122,14 @@ public class QRCodeScanActivity extends AppCompatActivity implements ZXingScanne
             }
         }
 
-
-        wifiManager.addNetwork(conf);
-        list = wifiManager.getConfiguredNetworks();
-
-        for (WifiConfiguration i : list) {
-            Log.d(TAG, "connectToWifi: Wificonfig_ssid:" + i.SSID);
-            if (i.SSID != null && i.SSID.equals("\"" + networkSSID + "\"")) {
-                Log.d(TAG, "connectToWifi: Found_Wificonfig_ssid:" + i.SSID);
-                wifiManager.disconnect();
-                wifiManager.enableNetwork(i.networkId, true);
-                wifiManager.reconnect();
-                break;
-            }
+        int networkId = wifiManager.addNetwork(conf);
+        wifiManager.disconnect();
+        if (wifiManager.enableNetwork(networkId, true)) {
+            wifiManager.reconnect();
+            return true;
+        } else {
+            wifiManager.removeNetwork(networkId);
+            return false;
         }
     }
 
@@ -172,6 +154,6 @@ public class QRCodeScanActivity extends AppCompatActivity implements ZXingScanne
 
         Notification notification = notifyBuilder.build();
 
-        notificationManager.notify(NOTIFICATION_ID, notification);
+        MyApplication.getNotificationManager().notify(0, notification);
     }
 }

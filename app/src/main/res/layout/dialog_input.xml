@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="32dp"
     android:orientation="vertical">
 
     <TextView
@@ -15,17 +16,20 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="SSID" />
+        android:hint="SSID" />
 
     <TextView
+        android:layout_marginTop="16dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/capability" />
 
     <LinearLayout
+        android:clickable="true"
         android:id="@+id/layout_capability"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingHorizontal="4dp"
         android:orientation="horizontal">
 
         <TextView
@@ -33,6 +37,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:textColor="@color/blue_grey_900"
+            android:textSize="16sp"
             android:text="@string/none" />
 
         <ImageButton
@@ -44,6 +50,7 @@
     </LinearLayout>
 
     <TextView
+        android:layout_marginTop="16dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/password" />
@@ -54,6 +61,13 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPassword" />
+
+    <CheckBox
+        android:id="@+id/checkBox_show_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:checked="false"
+        android:text="@string/show_password" />
 
 
 </LinearLayout>

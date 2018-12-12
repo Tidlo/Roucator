@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
@@ -22,18 +23,23 @@ public class QRCodeGenerateActivity extends AppCompatActivity {
     private static final int WHITE = 0xFFFFFFFF;
     private static final int BLACK = 0xFF000000;
     ImageView imageView;
+    TextView textViewSsid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qrcode_generate);
         imageView = findViewById(R.id.imgQRCode);
+        textViewSsid = findViewById(R.id.qrCode_ssid);
+
 
 
         Intent intent = getIntent();
         String type = intent.getStringExtra("type");
         String ssid = intent.getStringExtra("ssid");
         String password = intent.getStringExtra("password");
+
+        textViewSsid.setText(ssid);
         boolean hidden = intent.getBooleanExtra("hidden", false);
 
         /*Parameter	Example	Description

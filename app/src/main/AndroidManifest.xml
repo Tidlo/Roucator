@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:name=".util.MyApplication"
@@ -31,7 +32,8 @@
         <activity android:name=".SignUpActivity" />
         <activity android:name=".ChannelRatingActivity" />
         <activity android:name=".QRCodeScanActivity" />
-        <activity android:name=".QRCodeGenerateActivity"></activity>
+        <activity android:name=".QRCodeGenerateActivity" />
+        <activity android:name=".SavedWifiActivity"></activity>
     </application>
 
 </manifest>
