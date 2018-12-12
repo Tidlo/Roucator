@@ -39,4 +39,5 @@
     <string name="please_retry">请重试</string>
     <string name="save_to_local">保存到本地</string>
     <string name="would_you_save_to_local">要将此WiFi信息存在本地吗？</string>
+    <string name="update">更新</string>
 </resources>

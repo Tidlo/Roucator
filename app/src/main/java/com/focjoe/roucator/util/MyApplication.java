@@ -11,6 +11,7 @@ import java.util.List;
 public class MyApplication extends Application {
     private static Context context;
     private static List<WifiItem> wifiItemList;
+    public static int[] currentConnectedWifiIndex = new int[1];
     public static final String CHANNEL_ID = "channel_0";
     private static NotificationManager notificationManager;
 

@@ -11,8 +11,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,6 +31,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -56,7 +60,8 @@ public class MainActivity extends AppCompatActivity {
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_WIFI_STATE,
             Manifest.permission.ACCESS_NETWORK_STATE,
-            Manifest.permission.CAMERA
+            Manifest.permission.CAMERA,
+
     };
     private boolean mHasPermission;
     //    models
@@ -364,6 +369,20 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
+    public static String getCurrentSsid(Context context) {
+        String ssid = null;
+        ConnectivityManager connManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        if (networkInfo.isConnected()) {
+            final WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+            final WifiInfo connectionInfo = wifiManager.getConnectionInfo();
+            if (connectionInfo != null && !TextUtils.isEmpty(connectionInfo.getSSID())) {
+                ssid = connectionInfo.getSSID();
+            }
+        }
+        return ssid;
+    }
+
     private class Scanner extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -378,15 +397,10 @@ public class MainActivity extends AppCompatActivity {
             VendorService vendorService = VendorServiceFactory.makeVendorService(MyApplication.getContext().getResources());
 
             ScanResult result;
+            String currentSsid = getCurrentSsid(MainActivity.this);
+            Log.d(TAG, "onReceive: current ssid:" + currentSsid);
+            boolean flag = true;
             for (int i = 0; i < size; i++) {
-                Log.d(TAG, "onReceive: ++++++++++informations++++++++++++++++++");
-                Log.d(TAG, "onReceive: BSSID:" + scanResultList.get(i).BSSID);
-                Log.d(TAG, "onReceive: SSID:" + scanResultList.get(i).SSID);
-                Log.d(TAG, "onReceive: centerfreq0:" + String.valueOf(scanResultList.get(i).centerFreq0));
-                Log.d(TAG, "onReceive: centerfreq1:" + String.valueOf(scanResultList.get(i).centerFreq1));
-                Log.d(TAG, "onReceive: frequency:" + String.valueOf(scanResultList.get(i).frequency));
-                Log.d(TAG, "onReceive: operator friendly name:" + scanResultList.get(i).operatorFriendlyName);
-                Log.d(TAG, "onReceive: channel width:" + scanResultList.get(i).channelWidth);
 
                 result = scanResultList.get(i);
 
@@ -397,6 +411,12 @@ public class MainActivity extends AppCompatActivity {
                 item.setInfoManufacture(vendorService.findVendorName(item.getBSSID()));
                 item.setInfoDistance(String.format("%.2fm", LocatorActivity.calculateDistance(item)));
                 item.setConfigured(checkConfigured(item));
+                if (flag && currentSsid.equals("\"" + item.getSsid() + "\"")) {
+                    MyApplication.currentConnectedWifiIndex[0] = i;
+                    Log.d(TAG, "onReceive: Connected index:" + i);
+                    item.setConnected(true);
+                    flag = false;
+                }
                 nearbyWifiList.add(item);
             }
 

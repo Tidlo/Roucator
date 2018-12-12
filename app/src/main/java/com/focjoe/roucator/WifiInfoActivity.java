@@ -5,6 +5,8 @@ import android.app.Notification;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
@@ -25,8 +27,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.focjoe.roucator.model.SavedWifiEntry;
 import com.focjoe.roucator.model.WifiItem;
 import com.focjoe.roucator.util.MyApplication;
+import com.focjoe.roucator.util.WifiDbOpenHelper;
 
 import static com.focjoe.roucator.util.MyApplication.CHANNEL_ID;
 
@@ -54,6 +58,9 @@ public class WifiInfoActivity extends AppCompatActivity {
     //local variables
     private int wifiItemIndex;
     private WifiItem wifiItem;
+    private WifiDbOpenHelper dbOpenHelper;
+    private SQLiteDatabase database;
+    private Cursor cursor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +98,15 @@ public class WifiInfoActivity extends AppCompatActivity {
         textViewCapility.setText(wifiItem.getInfoCapility());
         textViewFrequencyBand.setText(wifiItem.getInfoFrequency());
 
+        //get db
+        dbOpenHelper = new WifiDbOpenHelper(this);
+        database = dbOpenHelper.getReadableDatabase();
+
+        //set connect button's visibility
+        if (wifiItem.isConnected()) {
+            buttonConnect.setVisibility(View.INVISIBLE);
+        }
+
         buttonLocator.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,25 +116,46 @@ public class WifiInfoActivity extends AppCompatActivity {
             }
         });
 
+
+        cursor = database.query(SavedWifiEntry.TABLE_NAME, null, SavedWifiEntry.COLUMN_NAME_SSID + " = '" + wifiItem.getSsid() + "'", null, null, null, null);
         buttonConnect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //if already saved password to local
-//                if(!wifiItem.getPassword().equals("")){
-//                    // TODO: 2018/12/12 查本地数据库找得到数据的情况，找到数据后直接用
-//                }else { // if haven't save password
-//                    Dialog dialog = buildInputDialog();
-//                    dialog.show();
-//                }
+                if (cursor.getCount() > 0) {
+                    cursor.moveToNext();
+                    final String ssid = cursor.getString(1);
+                    String type = cursor.getString(2);
+                    String pass = cursor.getString(3);
+
+                    if (configSucceed(type, ssid, pass)) {
+                        sendNotification(ssid);
+                        MyApplication.getWifiItemList().get(wifiItemIndex).setConnected(true);
+                        int curCon = MyApplication.currentConnectedWifiIndex[0];
+                        MyApplication.getWifiItemList().get(curCon).setConnected(false);
+                    } else {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(WifiInfoActivity.this);
+                        builder.setTitle(R.string.connect_fail)
+                                .setMessage("此无线网络的认证方式可能已发生改变，是否删除本地已保存的WiFi记录")
+                                .setPositiveButton(R.string.update, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        database.execSQL("DELETE FROM wifi WHERE ssid=?", new Object[]{ssid});
+                                        // TODO: 2018/12/12 使用 SnackBar 代替 Toast 
+                                        Toast.makeText(WifiInfoActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
+                                    }
+                                })
+                                .setNegativeButton(R.string.cancel, null)
+                                .show();
+                    }
+
+                } else { // if haven't save password
+                    Dialog dialog = buildInputDialog();
+                    dialog.show();
+                }
             }
         });
 
-
-//        if(wifiItem.getManageUrl() != null && !wifiItem.getManageUrl().equals("")){
-//
-//        }else {
-//            buttonManage.setVisibility(View.INVISIBLE);
-//        }
 
         buttonManage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -193,7 +230,7 @@ public class WifiInfoActivity extends AppCompatActivity {
 
                         if (configSucceed(type, ssid, pass)) {
                             sendNotification(ssid);
-                            showSaveToLocalDialog();
+                            showSaveToLocalDialog(type, ssid, pass);
                         } else {
                             AlertDialog.Builder builder = new AlertDialog.Builder(WifiInfoActivity.this);
                             builder.setTitle(R.string.connect_fail)
@@ -201,14 +238,6 @@ public class WifiInfoActivity extends AppCompatActivity {
                                     .setPositiveButton(R.string.confirm, null)
                                     .show();
                         }
-
-
-                        Intent intent = new Intent(WifiInfoActivity.this, QRCodeGenerateActivity.class);
-                        intent.putExtra("type", selectedType[0]);
-                        intent.putExtra("ssid", ssid);
-                        intent.putExtra("password", pass);
-                        startActivity(intent);
-
                     }
                 })
                 .setNegativeButton(R.string.cancel, null)
@@ -216,14 +245,15 @@ public class WifiInfoActivity extends AppCompatActivity {
         return builder.create();
     }
 
-    private void showSaveToLocalDialog() {
+    private void showSaveToLocalDialog(final String type, final String ssid, final String pass) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.save_to_local)
                 .setMessage(R.string.would_you_save_to_local)
                 .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
+                        database.execSQL("INSERT INTO wifi VALUES(NULL, ?,?,?)", new Object[]{ssid, type, pass});
+                        Toast.makeText(WifiInfoActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .setNegativeButton(R.string.cancel, null)

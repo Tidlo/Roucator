@@ -39,12 +39,12 @@ public class WifiDbOpenHelper extends SQLiteOpenHelper {
     private void initDb(SQLiteDatabase db) {
         ContentValues values = new ContentValues();
 
-        values.put(SavedWifiEntry.COLUMN_NAME_SSID, "Johnny");
-        values.put(SavedWifiEntry.COLUMN_NAME_CAPABILITY, "13939932213");
-        values.put(SavedWifiEntry.COLUMN_NAME_PASSWORD, 21);
+        values.put(SavedWifiEntry.COLUMN_NAME_SSID, "GUET-Student");
+        values.put(SavedWifiEntry.COLUMN_NAME_CAPABILITY, "nopass");
+        values.put(SavedWifiEntry.COLUMN_NAME_PASSWORD, "");
 
         db.insert(SavedWifiEntry.TABLE_NAME, null, values);
 
-        db.execSQL("INSERT INTO person VALUES(NULL, ?,?,?)", new Object[]{"Fancy", "13322143324", 22});
+//        db.execSQL("INSERT INTO person VALUES(NULL, ?,?,?)", new Object[]{"Fancy", "13322143324", 22});
     }
 }

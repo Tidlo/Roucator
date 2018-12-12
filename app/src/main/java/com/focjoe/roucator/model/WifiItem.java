@@ -18,6 +18,7 @@ public class WifiItem {
     private boolean configured;
     private boolean saved;
     private int percentage;
+    private boolean connected;
 
     //attributes for info activity
     private String manageUrl;
@@ -51,6 +52,7 @@ public class WifiItem {
         this.channelWidth = channelWidth;
         this.level = level;
         this.saved = false;
+        this.connected = false;
 
         this.manageUrl = "http://192.168.1.1";
         this.infoFrequencyType = "infoFrequencyType need implement";
@@ -215,5 +217,13 @@ public class WifiItem {
 
     public void setSaved(boolean saved) {
         this.saved = saved;
+    }
+
+    public boolean isConnected() {
+        return connected;
+    }
+
+    public void setConnected(boolean connected) {
+        this.connected = connected;
     }
 }

@@ -1,6 +1,7 @@
 package com.focjoe.roucator.model;
 
 public class SavedWifi {
+    int _id;
     String ssid; // wifi name
     String capability; // wifi capability
     String password; // password
