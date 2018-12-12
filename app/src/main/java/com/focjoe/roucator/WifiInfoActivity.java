@@ -2,20 +2,25 @@ package com.focjoe.roucator;
 
 import android.app.Dialog;
 import android.app.Notification;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,6 +36,8 @@ import com.focjoe.roucator.model.SavedWifiEntry;
 import com.focjoe.roucator.model.WifiItem;
 import com.focjoe.roucator.util.MyApplication;
 import com.focjoe.roucator.util.WifiDbOpenHelper;
+
+import java.util.List;
 
 import static com.focjoe.roucator.util.MyApplication.CHANNEL_ID;
 
@@ -54,6 +61,7 @@ public class WifiInfoActivity extends AppCompatActivity {
     private Button buttonLocator;
     private Button buttonManage;
     private Button buttonConnect;
+    private FloatingActionButton fabRefresh;
 
     //local variables
     private int wifiItemIndex;
@@ -61,6 +69,8 @@ public class WifiInfoActivity extends AppCompatActivity {
     private WifiDbOpenHelper dbOpenHelper;
     private SQLiteDatabase database;
     private Cursor cursor;
+    private WifiManager wifiManager;
+    private Scanner scanner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +97,7 @@ public class WifiInfoActivity extends AppCompatActivity {
         buttonLocator = findViewById(R.id.btn_test_locator);
         buttonManage = findViewById(R.id.btn_manage);
         buttonConnect = findViewById(R.id.btn_connect);
+        fabRefresh = findViewById(R.id.btn_refresh_info);
 
         //set views
         textViewSsid.setText(wifiItem.getSsid());
@@ -103,9 +114,13 @@ public class WifiInfoActivity extends AppCompatActivity {
         database = dbOpenHelper.getReadableDatabase();
 
         //set connect button's visibility
+        //set manage button's visibility
         if (wifiItem.isConnected()) {
             buttonConnect.setVisibility(View.INVISIBLE);
+        } else {
+            buttonManage.setVisibility(View.INVISIBLE);
         }
+
 
         buttonLocator.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,7 +130,6 @@ public class WifiInfoActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
 
         cursor = database.query(SavedWifiEntry.TABLE_NAME, null, SavedWifiEntry.COLUMN_NAME_SSID + " = '" + wifiItem.getSsid() + "'", null, null, null, null);
         buttonConnect.setOnClickListener(new View.OnClickListener() {
@@ -163,6 +177,18 @@ public class WifiInfoActivity extends AppCompatActivity {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(Uri.parse("https://www.baidu.com"));
                 startActivity(intent);
+            }
+        });
+
+        //set up scanner
+        wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        scanner = new WifiInfoActivity.Scanner();
+        registerReceiver(scanner, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+
+        fabRefresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                wifiManager.startScan();
             }
         });
     }
@@ -301,6 +327,7 @@ public class WifiInfoActivity extends AppCompatActivity {
         MyApplication.getNotificationManager().notify(0, notification);
     }
 
+
     //重写下面的两个方法来使用自定义 main_toolbar 上的菜单，定义菜单的的点击事件
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -323,5 +350,30 @@ public class WifiInfoActivity extends AppCompatActivity {
                 break;
         }
         return true;
+    }
+
+    private class Scanner extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            List<ScanResult> scanResultList = wifiManager.getScanResults();
+            int size = scanResultList.size();
+            Log.d(TAG, "onReceive: size of result" + size);
+
+            //find target wifi
+            for (ScanResult result :
+                    scanResultList) {
+                if (result.BSSID.equals(wifiItem.getBSSID())) {
+                    // TODO: 2018/12/12 Update UI
+                    wifiItem = new WifiItem(result.SSID, result.BSSID, result.capabilities,
+                            result.frequency, result.centerFreq0, result.centerFreq1, result.channelWidth, result.level);
+
+                    textViewLinkChannel.setText(String.valueOf(wifiItem.getChannel()));
+                    textViewDistance.setText(String.format("%.2fm", LocatorActivity.calculateDistance(wifiItem)));
+                    textViewFrequencyBand.setText(wifiItem.getInfoFrequency());
+                    Toast.makeText(context, "刷新完毕", Toast.LENGTH_SHORT).show();
+                    break;
+                }
+            }
+        }
     }
 }

@@ -386,19 +386,16 @@ public class MainActivity extends AppCompatActivity {
     private class Scanner extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d(TAG, "onReceive: Start.");
 
             scanResultList = wifiManager.getScanResults();
             wifiConfigurationList = wifiManager.getConfiguredNetworks();
 
             int size = scanResultList.size();
-            Log.d(TAG, "onReceive: scanlist size " + size);
             nearbyWifiList.clear();
             VendorService vendorService = VendorServiceFactory.makeVendorService(MyApplication.getContext().getResources());
 
             ScanResult result;
             String currentSsid = getCurrentSsid(MainActivity.this);
-            Log.d(TAG, "onReceive: current ssid:" + currentSsid);
             boolean flag = true;
             for (int i = 0; i < size; i++) {
 
@@ -407,13 +404,11 @@ public class MainActivity extends AppCompatActivity {
                 WifiItem item = new WifiItem(result.SSID, result.BSSID, result.capabilities,
                         result.frequency, result.centerFreq0, result.centerFreq1, result.channelWidth, result.level);
 
-                item.setInfoFrequencyType(item.getFrequency() > 5000 ? "5G" : "2.4G");
                 item.setInfoManufacture(vendorService.findVendorName(item.getBSSID()));
                 item.setInfoDistance(String.format("%.2fm", LocatorActivity.calculateDistance(item)));
                 item.setConfigured(checkConfigured(item));
-                if (flag && currentSsid.equals("\"" + item.getSsid() + "\"")) {
+                if (currentSsid != null && flag && currentSsid.equals("\"" + item.getSsid() + "\"")) {
                     MyApplication.currentConnectedWifiIndex[0] = i;
-                    Log.d(TAG, "onReceive: Connected index:" + i);
                     item.setConnected(true);
                     flag = false;
                 }
@@ -421,7 +416,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
             MyApplication.setWifiItemList(nearbyWifiList);
-            Log.d(TAG, "onReceive: Updated global wifi item list.");
             WifiItemAdapter wifiItemAdapter = new WifiItemAdapter(nearbyWifiList);
             recyclerView.setAdapter(wifiItemAdapter);
             wifiItemAdapter.notifyDataSetChanged();
@@ -433,8 +427,6 @@ public class MainActivity extends AppCompatActivity {
                     swipeRefresh.setRefreshing(false);
                 }
             });
-
-            Log.d(TAG, "onReceive: dfsafasdfasdfs");
         }
     }
 

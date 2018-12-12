@@ -34,8 +34,9 @@ public class LocatorActivity extends AppCompatActivity {
     int yTarget = 0;
     private List<ScanResult> scanResultList;
     private WifiManager wifiManager;
-    private String ssid;
+    private String BSSID;
     private WifiItem targetWifi;
+    private WifiItem wifiItem;
     private TextView test_ssid;
     private TextView test_strength;
     private TextView test_distance;
@@ -83,11 +84,13 @@ public class LocatorActivity extends AppCompatActivity {
 
 
         targetWifi = new WifiItem();
-        ssid = MyApplication
+
+
+        wifiItem = MyApplication
                 .getWifiItemList()
-                .get(getIntent().getIntExtra("item_index", 0))
-                .getSsid();
-        targetWifi.setSsid(ssid);
+                .get(getIntent().getIntExtra("item_index", 0));
+        targetWifi.setBSSID(wifiItem.getBSSID());
+        targetWifi.setSsid(wifiItem.getSsid());
 
         initScanner();
 
@@ -181,16 +184,18 @@ public class LocatorActivity extends AppCompatActivity {
             Log.d(TAG, "onReceive: size of result" + size);
 
             //find target wifi
-            int i;
-            for (i = 0; i < size; i++) {
-                if (ssid.compareTo(scanResultList.get(i).SSID) == 0) {
-                    targetWifi.setSignalStrengthIndB(scanResultList.get(i).level);
-                    targetWifi.setFrequency(scanResultList.get(i).frequency);
-                    break;
+
+            boolean flag = true;
+            for (ScanResult i :
+                    scanResultList) {
+                if (i.BSSID.equals(targetWifi.getBSSID())) {
+                    targetWifi.setSignalStrengthIndB(i.level);
+                    targetWifi.setFrequency(i.frequency);
+                    flag = false;
                 }
             }
 
-            if (i == size) {
+            if (flag) {
                 Toast.makeText(context, "失去与此 Wifi 的连接", Toast.LENGTH_SHORT).show();
             } else {
                 distance = calculateDistance(targetWifi);

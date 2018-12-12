@@ -55,7 +55,7 @@ public class WifiItem {
         this.connected = false;
 
         this.manageUrl = "http://192.168.1.1";
-        this.infoFrequencyType = "infoFrequencyType need implement";
+        this.infoFrequencyType = frequency > 5000 ? "5G" : "2.4G";
         this.infoManufacture = "infoManufacture need implement";
         this.infoLinkSpeed = "infoLinkSpeed need implement";
         this.infoDistance = "infoDistance need implement";
