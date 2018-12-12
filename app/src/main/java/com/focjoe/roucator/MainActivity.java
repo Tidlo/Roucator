@@ -2,15 +2,19 @@ package com.focjoe.roucator;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -70,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
 
+    // notifications
+    NotificationManager notificationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,6 +150,22 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        //set up notification manager
+        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        //create notification channel
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+            NotificationChannel channel = new NotificationChannel(MyApplication.CHANNEL_ID,
+                    "Channel1", NotificationManager.IMPORTANCE_HIGH);
+
+            channel.enableLights(true);
+            channel.setLightColor(Color.GREEN);
+            channel.setShowBadge(true);
+
+            notificationManager.createNotificationChannel(channel);
+        }
+        MyApplication.setNotificationManager(notificationManager);
 
         //initial refresh
         swipeRefresh.post(new Runnable() {
