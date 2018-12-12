@@ -16,6 +16,7 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NotificationCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
@@ -79,6 +80,7 @@ public class WifiInfoActivity extends AppCompatActivity {
     private Cursor cursor;
     private WifiManager wifiManager;
     private Scanner scanner;
+    private ActionBar actionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,8 +88,7 @@ public class WifiInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_wifi_info);
 
         //use info_toolbar replace actionbar
-        toolbar = findViewById(R.id.info_tool_bar);
-        setSupportActionBar(toolbar);
+        initToolbar();
 
         wifiItemIndex = getIntent().getIntExtra("item_index", 0);
         wifiItem = MyApplication.getWifiItemList().get(wifiItemIndex);
@@ -230,6 +231,14 @@ public class WifiInfoActivity extends AppCompatActivity {
                 wifiManager.startScan();
             }
         });
+    }
+
+    private void initToolbar() {
+        toolbar = findViewById(R.id.info_tool_bar);
+        setSupportActionBar(toolbar);
+        actionBar = getSupportActionBar();
+        actionBar.setIcon(R.drawable.round_arrow_back_white_24);
+
     }
 
     /**

@@ -41,4 +41,6 @@
     <string name="would_you_save_to_local">要将此WiFi信息存在本地吗？</string>
     <string name="update">更新</string>
     <string name="show_password">显示密码</string>
+    <string name="navigation_drawer_open">开启侧边菜单</string>
+    <string name="navigation_drawer_close">关闭侧边菜单</string>
 </resources>

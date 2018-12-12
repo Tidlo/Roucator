@@ -32,7 +32,8 @@
         <activity android:name=".SignUpActivity" />
         <activity android:name=".ChannelRatingActivity" />
         <activity android:name=".QRCodeScanActivity" />
-        <activity android:name=".QRCodeGenerateActivity"></activity>
+        <activity android:name=".QRCodeGenerateActivity" />
+        <activity android:name=".SavedWifiActivity"></activity>
     </application>
 
 </manifest>

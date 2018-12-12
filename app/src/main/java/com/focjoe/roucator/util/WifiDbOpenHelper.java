@@ -45,6 +45,8 @@ public class WifiDbOpenHelper extends SQLiteOpenHelper {
 
         db.insert(SavedWifiEntry.TABLE_NAME, null, values);
 
-//        db.execSQL("INSERT INTO person VALUES(NULL, ?,?,?)", new Object[]{"Fancy", "13322143324", 22});
+        db.execSQL("INSERT INTO wifi VALUES(NULL, ?,?,?)", new Object[]{"Fancy", "nopass", "asdasdasd"});
+        db.execSQL("INSERT INTO wifi VALUES(NULL, ?,?,?)", new Object[]{"asdasd", "nopass", "asdasdasd"});
+        db.execSQL("INSERT INTO wifi VALUES(NULL, ?,?,?)", new Object[]{"fghfghf", "nopass", "asdasdasd"});
     }
 }

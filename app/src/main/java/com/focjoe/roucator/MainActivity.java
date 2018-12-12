@@ -25,6 +25,8 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -75,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
     private Scanner scanner;
 
     //    views
+    private ActionBar actionBar;
     private SwipeRefreshLayout swipeRefresh;
     private RecyclerView recyclerView;
     private Toolbar toolbar;
@@ -91,8 +94,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //使用 main_toolbar 取代 actionbar
-        toolbar = findViewById(R.id.main_tool_bar);
-        setSupportActionBar(toolbar);
+        initToolbar();
 
         //检查权限和申请权限
         mHasPermission = checkPermission();
@@ -135,29 +137,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //set up navigation view
-        drawerLayout = findViewById(R.id.main_drawer_layout);
-        navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                Intent intent;
-                switch (menuItem.getItemId()) {
-                    case R.id.nav_channel_rating:
-                        intent = new Intent(MainActivity.this, ChannelRatingActivity.class);
-                        startActivity(intent);
-                        break;
-                    case R.id.nav_scan_qr_code:
-                        intent = new Intent(MainActivity.this, QRCodeScanActivity.class);
-                        startActivity(intent);
-                        break;
-                    case R.id.nav_generate_qr_code:
-                        generateQRCode();
-                        break;
-                }
-                drawerLayout.closeDrawers();
-                return true;
-            }
-        });
+        initNavigationView();
+
 
         //set up notification manager
         notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
@@ -185,6 +166,52 @@ public class MainActivity extends AppCompatActivity {
         listener.onRefresh();
     }
 
+    private void initNavigationView() {
+        drawerLayout = findViewById(R.id.main_drawer_layout);
+        navigationView = findViewById(R.id.nav_view);
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+            }
+        };
+        drawerLayout.setDrawerListener(toggle);
+        toggle.syncState();
+
+
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                Intent intent;
+                switch (menuItem.getItemId()) {
+                    case R.id.nav_channel_rating:
+                        intent = new Intent(MainActivity.this, ChannelRatingActivity.class);
+                        startActivity(intent);
+                        break;
+                    case R.id.nav_scan_qr_code:
+                        intent = new Intent(MainActivity.this, QRCodeScanActivity.class);
+                        startActivity(intent);
+                        break;
+                    case R.id.nav_generate_qr_code:
+                        generateQRCode();
+                        break;
+                }
+                drawerLayout.closeDrawers();
+                return true;
+            }
+        });
+    }
+
+    private void initToolbar() {
+        toolbar = findViewById(R.id.main_tool_bar);
+        setSupportActionBar(toolbar);
+        actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setTitle("Roucator");
+    }
+
+
     private void generateQRCode() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.select_data_source)
@@ -199,8 +226,10 @@ public class MainActivity extends AppCompatActivity {
                 .setNegativeButton(R.string.select_from_exist, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        dialog = buildSelectDialog();
-                        ((Dialog) dialog).show();
+//                        dialog = buildSelectDialog();
+//                        ((Dialog) dialog).show();
+                        Intent intent = new Intent(MainActivity.this, SavedWifiActivity.class);
+                        startActivity(intent);
 
                     }
                 }).show();
