@@ -33,7 +33,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.focjoe.roucator.adapter.WifiItemAdapter;
 import com.focjoe.roucator.model.VendorService;
@@ -288,9 +287,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.toolbar_menu_refresh:
-                Toast.makeText(this, "You clicked refresh", Toast.LENGTH_SHORT).show();
-                break;
             default:
                 break;
         }

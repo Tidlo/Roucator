@@ -61,11 +61,24 @@ public class WifiItemAdapter extends RecyclerView.Adapter<WifiItemAdapter.ViewHo
         WifiItem wifiItem = wifiItems.get(position);
 
         holder.ssid.setText(wifiItem.getSsid());
-        holder.frequency.setText(String.format("%d MHz", wifiItem.getFrequency()));
-        holder.strength.setText(String.format("%d dBm", wifiItem.getSignalStrengthIndB()));
-        holder.capability.setText(wifiItem.getCapabilities());
-        holder.channel.setText(String.format("CH %d", wifiItem.getChannel()));
-        holder.configured.setText(wifiItem.isConfigured() ? "configured" : "not configured");
+//        holder.frequency.setText(String.format("%d MHz", wifiItem.getFrequency()));
+//        holder.strength.setText(String.format("%d dBm", wifiItem.getSignalStrengthIndB()));
+//        holder.capability.setText(wifiItem.getCapabilities());
+//        holder.channel.setText(String.format("CH %d", wifiItem.getChannel()));
+
+        if (wifiItem.isConfigured()) {
+            holder.configured.setImageResource(R.drawable.round_lock_open_black_36);
+        }
+
+        if (wifiItem.isSaved()) {
+            holder.savedIcon.setImageResource(R.drawable.round_save_black_36);
+        }
+
+        if (wifiItem.getInfoFrequencyType().equals("5G")) {
+            holder.freqIcon.setImageResource(R.drawable.m5g_token);
+        }
+
+        holder.mac.setText(wifiItem.getBSSID());
 
         int percentage = wifiItem.getPercentage();
         if (percentage < 25) {
@@ -88,23 +101,33 @@ public class WifiItemAdapter extends RecyclerView.Adapter<WifiItemAdapter.ViewHo
     static class ViewHolder extends RecyclerView.ViewHolder {
         View itemView;
         TextView ssid;
-        TextView frequency;
-        TextView strength;
-        TextView capability;
-        TextView channel;
-        TextView configured;
+        TextView mac;
+
+        //        TextView frequency;
+//        TextView strength;
+//        TextView capability;
+//        TextView channel;
+        ImageView configured;
         ImageView signalBar;
+
+        ImageView freqIcon;
+        ImageView savedIcon;
+
+
 
         public ViewHolder(View view) {
             super(view);
             itemView = view;
             ssid = view.findViewById(R.id.wifi_ssid);
-            frequency = view.findViewById(R.id.wifi_freq);
-            strength = view.findViewById(R.id.wifi_strength);
-            capability = view.findViewById(R.id.wifi_capability);
-            channel = view.findViewById(R.id.wifi_channel);
+//            frequency = view.findViewById(R.id.wifi_freq);
+//            strength = view.findViewById(R.id.wifi_strength);
+//            capability = view.findViewById(R.id.wifi_capability);
+//            channel = view.findViewById(R.id.wifi_channel);
+            freqIcon = view.findViewById(R.id.wifi_token);
+            mac = view.findViewById(R.id.wifi_mac);
             signalBar = view.findViewById(R.id.wifi_signal_bar);
             configured = view.findViewById(R.id.wifi_configured);
+            savedIcon = view.findViewById(R.id.wifi_saved);
         }
     }
 
