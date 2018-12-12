@@ -34,4 +34,5 @@
     <string name="wpa">WPA/WPA2 PSK</string>
     <string name="wifi_name">网络名称</string>
     <string name="password">密码</string>
+    <string name="log_in">登录</string>
 </resources>

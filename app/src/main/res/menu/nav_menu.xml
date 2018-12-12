@@ -17,5 +17,9 @@
             android:id="@+id/nav_generate_qr_code"
             android:icon="@drawable/qr_code"
             android:title="@string/generate_qr_code" />
+        <item
+            android:id="@+id/nav_log_in"
+            android:icon="@drawable/qr_code"
+            android:title="@string/log_in" />
     </group>
 </menu>
