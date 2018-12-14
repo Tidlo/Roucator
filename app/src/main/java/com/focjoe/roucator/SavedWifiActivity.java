@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
@@ -28,8 +29,10 @@ public class SavedWifiActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_saved_wifi);
-
         recyclerView = findViewById(R.id.sved_wifi_recycler_view);
+        LinearLayoutManager linearLayout = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(linearLayout);
+
         dbOpenHelper = new WifiDbOpenHelper(this);
         db = dbOpenHelper.getReadableDatabase();
         Cursor cursor = db.query(SavedWifiEntry.TABLE_NAME, null, null, null, null, null, null);
@@ -47,4 +50,12 @@ public class SavedWifiActivity extends AppCompatActivity {
         adapter = new SavedWfiAdapter(savedWifiList);
         recyclerView.setAdapter(adapter);
     }
+
+    @Override
+    protected void onDestroy() {
+
+        dbOpenHelper.close();
+        super.onDestroy();
+    }
+
 }
