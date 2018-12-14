@@ -60,6 +60,13 @@ public class SavedWfiAdapter extends RecyclerView.Adapter<SavedWfiAdapter.ViewHo
         });
     }
 
+    // TODO: 2018/12/14 [已保存的项目]列表，会展示是否保存了，点击项目弹出上下文菜单
+    // TODO: 2018/12/14 上下文菜单根据是否已经 sync 显示sync 菜单，
+    // TODO: 2018/12/14 已经sync过的就展示已sync的图标，未sync 的展示上传图标
+    // TODO: 2018/12/14 用户登录时会把已sync 的同步到本地，逐条执行跟本地数据库的判断
+    // TODO: 2018/12/14 如果本地已经存在，则跳过，仍然标记为未sync
+    // TODO: 2018/12/14 如果本地不存在，则添加到本地数据库，标记为 synced
+
     @Override
     public int getItemCount() {
         return savedWifiList.size();

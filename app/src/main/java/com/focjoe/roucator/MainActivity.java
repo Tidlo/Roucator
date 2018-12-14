@@ -195,6 +195,10 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.nav_generate_qr_code:
                         generateQRCode();
                         break;
+                    case R.id.nav_log_in:
+                        intent = new Intent(MainActivity.this, LogInActivity.class);
+                        startActivity(intent);
+                        break;
                 }
                 drawerLayout.closeDrawers();
                 return true;

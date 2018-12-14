@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,6 +25,7 @@ public class QRCodeGenerateActivity extends AppCompatActivity {
     private static final int BLACK = 0xFF000000;
     ImageView imageView;
     TextView textViewSsid;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +34,7 @@ public class QRCodeGenerateActivity extends AppCompatActivity {
         imageView = findViewById(R.id.imgQRCode);
         textViewSsid = findViewById(R.id.qrCode_ssid);
 
+        initToolbar();
 
 
         Intent intent = getIntent();
@@ -59,6 +62,21 @@ public class QRCodeGenerateActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+    private void initToolbar() {
+        toolbar = findViewById(R.id.generate_qr_code_tool_bar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
 
     private String encodeQRCodeWifi(String type, String ssid, String pass, boolean hidden) {
 

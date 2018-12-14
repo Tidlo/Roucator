@@ -236,9 +236,15 @@ public class WifiInfoActivity extends AppCompatActivity {
     private void initToolbar() {
         toolbar = findViewById(R.id.info_tool_bar);
         setSupportActionBar(toolbar);
-        actionBar = getSupportActionBar();
-        actionBar.setIcon(R.drawable.round_arrow_back_white_24);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     /**
@@ -257,6 +263,8 @@ public class WifiInfoActivity extends AppCompatActivity {
         LinearLayout layout = view.findViewById(R.id.layout_capability);
         final CheckBox checkBox = view.findViewById(R.id.checkBox_show_password);
 
+        editTextSSID.setText(wifiItem.getBSSID());
+        editTextSSID.setEnabled(false);
 
         final String[] selectedType = {"nopass"};
 
@@ -434,7 +442,7 @@ public class WifiInfoActivity extends AppCompatActivity {
             default:
                 break;
         }
-        return true;
+        return false;
     }
 
     private class Scanner extends BroadcastReceiver {
