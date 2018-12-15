@@ -179,6 +179,7 @@ public class WifiInfoActivity extends AppCompatActivity {
                     String type = cursor.getString(2);
                     String pass = cursor.getString(3);
 
+                    Log.d(TAG, "onClick: saved:" + cursor.getString(4));
                     // if successful configured network
                     if (configSucceed(type, ssid, pass)) {
                         sendNotification(ssid);
@@ -435,10 +436,10 @@ public class WifiInfoActivity extends AppCompatActivity {
             case R.id.toolbar_menu_upload:
                 Toast.makeText(this, "You clicked upload", Toast.LENGTH_SHORT).show();
                 break;
-            case R.id.toolbar_menu_qr_code:
-                intent = new Intent(WifiInfoActivity.this, QRCodeGenerateActivity.class);
-                startActivity(intent);
-                break;
+//            case R.id.toolbar_menu_qr_code:
+//                intent = new Intent(WifiInfoActivity.this, QRCodeGenerateActivity.class);
+//                startActivity(intent);
+//                break;
             default:
                 break;
         }

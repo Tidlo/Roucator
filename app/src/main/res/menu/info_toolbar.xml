@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <!--这里是工具栏 info_toolbar 上的各个菜单选项-->
 
-    <item
-        android:id="@+id/toolbar_menu_qr_code"
-        android:icon="@drawable/round_code_white_48"
-        android:title="@string/qrcode"
-        app:showAsAction="always" />
+    <!--<item-->
+    <!--android:id="@+id/toolbar_menu_qr_code"-->
+    <!--android:icon="@drawable/qr_code_white"-->
+    <!--android:title="@string/qrcode"-->
+    <!--app:showAsAction="always" />-->
 
     <item
         android:id="@+id/toolbar_menu_upload"

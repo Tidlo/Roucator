@@ -247,22 +247,6 @@ public class MainActivity extends AppCompatActivity {
                 }).show();
     }
 
-    private Dialog buildSelectDialog() {
-        LayoutInflater inflater = getLayoutInflater();
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        View view = inflater.inflate(R.layout.dialog_input, null);
-        builder.setView(view)
-                .setCancelable(false)
-                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // TODO: 2018/12/12 show stored items
-                    }
-                })
-                .setNegativeButton(R.string.cancel, null)
-                .setTitle(R.string.select);
-        return builder.create();
-    }
 
     private Dialog buildInputDialog() {
         LayoutInflater inflater = getLayoutInflater();
@@ -455,6 +439,11 @@ public class MainActivity extends AppCompatActivity {
             cursor.close();
             String[] savedNames = savedWifiNames.toArray(new String[0]);
 
+            for (String str :
+                    savedNames) {
+                Log.d(TAG, "onReceive: saved name:" + str);
+            }
+            Arrays.sort(savedNames);
             //get scan result list and configured wifi list
             scanResultList = wifiManager.getScanResults();
             wifiConfigurationList = wifiManager.getConfiguredNetworks();
@@ -483,10 +472,10 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 //whether this wifi item is already saved in local database
-                if (Arrays.binarySearch(savedNames, item.getSsid()) > 0) {
+                if (Arrays.binarySearch(savedNames, item.getSsid()) > -1) {
                     item.setSaved(true);
+                    Log.d(TAG, "onReceive: is saved:" + item.getSsid());
                 }
-
                 nearbyWifiList.add(item);
             }
 

@@ -8,4 +8,6 @@ public class SavedWifiEntry implements BaseColumns {
     public static final String COLUMN_NAME_SSID = "ssid";
     public static final String COLUMN_NAME_CAPABILITY = "capability";
     public static final String COLUMN_NAME_PASSWORD = "password";
+    public static final String COLUMN_NAME_SYNCED = "synced";
+
 }
