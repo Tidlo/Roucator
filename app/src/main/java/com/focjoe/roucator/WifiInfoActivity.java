@@ -263,7 +263,7 @@ public class WifiInfoActivity extends AppCompatActivity {
         LinearLayout layout = view.findViewById(R.id.layout_capability);
         final CheckBox checkBox = view.findViewById(R.id.checkBox_show_password);
 
-        editTextSSID.setText(wifiItem.getBSSID());
+        editTextSSID.setText(wifiItem.getSsid());
         editTextSSID.setEnabled(false);
 
         final String[] selectedType = {"nopass"};

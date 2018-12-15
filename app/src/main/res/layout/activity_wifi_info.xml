@@ -134,10 +134,10 @@
         <android.support.v7.widget.CardView
             android:id="@+id/cardView3"
             android:layout_width="match_parent"
-            android:layout_height="141dp"
-            android:layout_marginStart="16dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -148,16 +148,13 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:layout_marginRight="4dp"
-                    android:layout_weight="1"
-                    android:gravity="right"
+                    android:layout_margin="16dp"
                     android:orientation="vertical">
 
                     <TextView
@@ -166,9 +163,37 @@
                         android:text="@string/manufacture" />
 
                     <TextView
+                        android:id="@+id/info_manufacture"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/blue_grey_900"
+                        android:textSize="18sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:orientation="vertical">
+
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/link_channel" />
+
+                    <TextView
+                        android:id="@+id/info_link_channel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/blue_grey_900"
+                        android:textSize="18sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:orientation="vertical">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -176,51 +201,51 @@
                         android:text="@string/distance" />
 
                     <TextView
+                        android:id="@+id/info_distance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/blue_grey_900"
+                        android:textSize="18sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:orientation="vertical">
+
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/capability" />
+
+                    <TextView
+                        android:id="@+id/info_capability"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/blue_grey_900"
+                        android:textSize="18sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:orientation="vertical">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/frequency_band" />
 
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:layout_marginLeft="4dp"
-                    android:layout_weight="2"
-                    android:gravity="left"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/info_manufacture"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-
-                    <TextView
-                        android:id="@+id/info_link_channel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-
-                    <TextView
-                        android:id="@+id/info_distance"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-
-                    <TextView
-                        android:id="@+id/info_capability"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-
                     <TextView
                         android:id="@+id/info_frequency_band"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/blue_grey_900"
+                        android:textSize="18sp" />
                 </LinearLayout>
+
             </LinearLayout>
 
         </android.support.v7.widget.CardView>
@@ -229,36 +254,43 @@
             android:id="@+id/btn_test_locator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="40dp"
-            android:text="定位"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="116dp"
+            android:layout_marginBottom="92dp"
+            android:background="@drawable/locator_button"
+            android:text="@string/locate"
+            android:textColor="@color/grey_3"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.707"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/cardView3"
+            app:layout_constraintVertical_bias="1.0" />
 
         <Button
             android:id="@+id/btn_manage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="40dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/manage_button"
             android:text="@string/manage"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:textColor="@color/grey_3"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_test_locator"
             app:layout_constraintEnd_toStartOf="@+id/btn_test_locator"
-            app:layout_constraintHorizontal_bias="0.637"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/cardView3"
+            app:layout_constraintVertical_bias="1.0" />
 
         <Button
             android:id="@+id/btn_connect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="44dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="92dp"
+            android:background="@drawable/connect_button"
             android:text="@string/connect"
-            app:layout_constraintBottom_toTopOf="@+id/btn_manage"
-            app:layout_constraintEnd_toStartOf="@+id/btn_test_locator" />
+            android:textColor="@color/grey_3"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btn_test_locator"
+            app:layout_constraintTop_toBottomOf="@+id/cardView3"
+            app:layout_constraintVertical_bias="1.0" />
 
     </android.support.constraint.ConstraintLayout>
 

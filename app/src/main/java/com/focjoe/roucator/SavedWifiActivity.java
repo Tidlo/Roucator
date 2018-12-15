@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 import com.focjoe.roucator.adapter.SavedWfiAdapter;
@@ -23,12 +24,14 @@ public class SavedWifiActivity extends AppCompatActivity {
     List<SavedWifi> savedWifiList;
     SavedWfiAdapter adapter;
     RecyclerView recyclerView;
+    Toolbar toolbar;
     private WifiDbOpenHelper dbOpenHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_saved_wifi);
+        initToolbar();
         recyclerView = findViewById(R.id.sved_wifi_recycler_view);
         LinearLayoutManager linearLayout = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayout);
@@ -49,6 +52,20 @@ public class SavedWifiActivity extends AppCompatActivity {
 
         adapter = new SavedWfiAdapter(savedWifiList);
         recyclerView.setAdapter(adapter);
+    }
+
+    private void initToolbar() {
+        toolbar = findViewById(R.id.saved_wifi_tool_bar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     @Override

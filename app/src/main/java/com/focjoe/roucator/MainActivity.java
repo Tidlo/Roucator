@@ -10,6 +10,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -48,12 +50,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.focjoe.roucator.adapter.WifiItemAdapter;
+import com.focjoe.roucator.model.SavedWifiEntry;
 import com.focjoe.roucator.model.VendorService;
 import com.focjoe.roucator.model.VendorServiceFactory;
 import com.focjoe.roucator.model.WifiItem;
 import com.focjoe.roucator.util.MyApplication;
+import com.focjoe.roucator.util.WifiDbOpenHelper;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -199,6 +204,9 @@ public class MainActivity extends AppCompatActivity {
                         intent = new Intent(MainActivity.this, LogInActivity.class);
                         startActivity(intent);
                         break;
+                    case R.id.nav_saved_item:
+                        intent = new Intent(MainActivity.this, SavedWifiActivity.class);
+                        startActivity(intent);
                 }
                 drawerLayout.closeDrawers();
                 return true;
@@ -433,6 +441,21 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
 
+            //get locally stored wifi items
+            WifiDbOpenHelper dbOpenHelper = new WifiDbOpenHelper(MyApplication.getContext());
+            SQLiteDatabase db = dbOpenHelper.getReadableDatabase();
+            Cursor cursor = db.query(SavedWifiEntry.TABLE_NAME, null, null, null, null, null, null);
+            List<String> savedWifiNames = new ArrayList<>();
+            // use queried data to create a list
+            Log.d(TAG, "onCreate: cursor size:" + cursor.getCount());
+            while (cursor.moveToNext()) {
+                String ssid = cursor.getString(1);
+                savedWifiNames.add(ssid);
+            }
+            cursor.close();
+            String[] savedNames = savedWifiNames.toArray(new String[0]);
+
+            //get scan result list and configured wifi list
             scanResultList = wifiManager.getScanResults();
             wifiConfigurationList = wifiManager.getConfiguredNetworks();
 
@@ -458,6 +481,12 @@ public class MainActivity extends AppCompatActivity {
                     item.setConnected(true);
                     flag = false;
                 }
+
+                //whether this wifi item is already saved in local database
+                if (Arrays.binarySearch(savedNames, item.getSsid()) > 0) {
+                    item.setSaved(true);
+                }
+
                 nearbyWifiList.add(item);
             }
 

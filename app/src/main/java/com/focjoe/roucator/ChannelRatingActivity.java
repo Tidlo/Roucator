@@ -1,6 +1,5 @@
 package com.focjoe.roucator;
 
-import android.graphics.PorterDuff;
 import android.net.wifi.ScanResult;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -64,18 +63,21 @@ public class ChannelRatingActivity extends AppCompatActivity {
             test += "\n";
         }
 
+
         Log.d(TAG, "onCreate: 2.4G:" + test);
     }
 
     private void initToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setNavigationIcon(R.drawable.round_menu_black_24);
-        toolbar.getNavigationIcon().setColorFilter(getResources().getColor(R.color.grey_60), PorterDuff.Mode.SRC_ATOP);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Gallery");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        Tools.setSystemBarColor(this, R.color.grey_5);
-        Tools.setSystemBarLight(this);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     private void initComponent() {

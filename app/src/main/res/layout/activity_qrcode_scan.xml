@@ -3,10 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingLeft="8dp"
     android:paddingTop="8dp"
     android:paddingRight="8dp"
     android:paddingBottom="8dp"
     tools:context=".QRCodeScanActivity">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/generate_qr_code_tool_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 </RelativeLayout>

@@ -44,9 +44,9 @@ public class DrawView extends View {
         this.setDrawingCacheEnabled(true);
 
         Resources res1 = this.getResources();
-        originalB = BitmapFactory.decodeResource(res1, R.drawable.round_location_on_white_48);
+        originalB = BitmapFactory.decodeResource(res1, R.drawable.round_location_on_white_24);
         originalB = small(originalB);
-        destinationB = BitmapFactory.decodeResource(res1, R.drawable.round_wifi_tethering_white_48);
+        destinationB = BitmapFactory.decodeResource(res1, R.drawable.round_wifi_tethering_white_24);
         destinationB = small(destinationB);
     }
 

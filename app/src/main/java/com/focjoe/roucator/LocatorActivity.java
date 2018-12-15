@@ -12,6 +12,7 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -37,6 +38,7 @@ public class LocatorActivity extends AppCompatActivity {
     private String BSSID;
     private WifiItem targetWifi;
     private WifiItem wifiItem;
+    private Toolbar toolbar;
     private TextView test_ssid;
     private TextView test_strength;
     private TextView test_distance;
@@ -57,6 +59,13 @@ public class LocatorActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_locator);
+
+        toolbar = findViewById(R.id.locator_tool_bar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
 
         test_ssid = findViewById(R.id.locator_ssid);
         test_strength = findViewById(R.id.locator_strength);

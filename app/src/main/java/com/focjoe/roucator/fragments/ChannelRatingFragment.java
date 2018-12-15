@@ -9,12 +9,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.focjoe.roucator.R;
 import com.focjoe.roucator.adapter.ChannelRateItemAdapter;
 import com.focjoe.roucator.model.ChannelInfo;
 import com.focjoe.roucator.util.MyApplication;
 
+import java.util.Comparator;
 import java.util.List;
 
 public class ChannelRatingFragment extends Fragment {
@@ -32,12 +34,6 @@ public class ChannelRatingFragment extends Fragment {
         this.channelInfos = channelInfos;
         return this;
     }
-//    public ChannelRatingFragment newInstance(List<ChannelInfo> channelInfoList ) {
-//
-//        ChannelRatingFragment fragment = new ChannelRatingFragment();
-//        fragment.channelInfos = channelInfoList;
-//        return fragment;
-//    }
 
     @Nullable
     @Override
@@ -51,6 +47,19 @@ public class ChannelRatingFragment extends Fragment {
         ChannelRateItemAdapter adapter = new ChannelRateItemAdapter(channelInfos);
         recyclerView.setAdapter(adapter);
         recyclerView.hasFixedSize();
+
+        TextView textViewBestChannel = view.findViewById(R.id.best_channel);
+
+        String bestChannel;
+        channelInfos.sort(new Comparator<ChannelInfo>() {
+            @Override
+            public int compare(ChannelInfo o1, ChannelInfo o2) {
+                return o1.getRating() - o2.getRating();
+            }
+        });
+        bestChannel = channelInfos.get(0).getName();
+        textViewBestChannel.setText(bestChannel);
+
         return view;
     }
 }
