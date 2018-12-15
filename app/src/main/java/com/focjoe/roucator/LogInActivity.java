@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -38,6 +39,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
     TextInputEditText password;
     Button log_in;
     Button sign_up;
+    Toolbar toolbar;
     CheckBox remember;
     SharedPreferences sp;
     SharedPreferences.Editor editor;
@@ -61,6 +63,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
 
+        initToolbar();
         username = findViewById(R.id.user_name);
         password = findViewById(R.id.user_password);
         log_in = findViewById(R.id.log_in);
@@ -71,6 +74,20 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
         spForwifi = getSharedPreferences("saveForwifi", 0);
         sp = getSharedPreferences("save", 0);
         Remember(sp.getBoolean("rememberpwd", false));
+    }
+
+    private void initToolbar() {
+        toolbar = findViewById(R.id.log_in_tool_bar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     @Override
@@ -92,6 +109,9 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                                 Toast.makeText(this, toastInfo, Toast.LENGTH_SHORT).show();
                                 break;
                             }
+                        }
+                        if (flag != 1) {
+                            Toast.makeText(this, "登录失败，稍后重试", Toast.LENGTH_SHORT).show();
                         }
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -145,8 +165,9 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
 //                System.out.println(result.getString("vertifyInfo"));
                 Log.i("MainActivity", result.getString("vertifyInfo"));
                 flag = 1;
-                toastInfo = getInfo(result.getString("vertifyInfo"));
-                if (result.getString("vertifyInfo").equals("0")) {
+//                toastInfo = getInfo(result.getString("vertifyInfo"));
+                toastInfo = result.getString("vertifyInfo");
+                if (result.getString("vertifyInfo").equals("登陆成功")) {
                     //在判断登录成功后保存账号密码
                     editor = sp.edit();
                     editorForwifi = spForwifi.edit();
@@ -162,6 +183,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                         editor.clear();
                     }
                     editor.apply();
+                    editorForwifi.apply();
                     //解析接收的JSONArray数据
                     JSONArray JA = result.getJSONArray("wifilist");
                     List<SavedWifi> wifilist = new ArrayList<>();
@@ -180,6 +202,8 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
 //                        Log.i("MainActivity", SW.getPassword());
 //                        Log.i("MainActivity", SW.getCapability());
 //                    }
+                    Thread.sleep(400);
+                    finish();
                 }
             }
 
@@ -188,18 +212,18 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    public String getInfo(String code) {
-        switch (code) {
-            case "0":
-                return "登陆成功";
-            case "1":
-            case "2":
-                return "用户名或密码错误";
-            case "3":
-            default:
-                return "未知错误";
-        }
-    }
+//    public String getInfo(String code) {
+//        switch (code) {
+//            case "0":
+//                return "登陆成功";
+//            case "1":
+//            case "2":
+//                return "用户名或密码错误";
+//            case "3":
+//            default:
+//                return "未知错误";
+//        }
+//    }
 
     public void Remember(Boolean flag) {
         Log.i("MainActivity", "++++++" + flag.toString() + "++++++");

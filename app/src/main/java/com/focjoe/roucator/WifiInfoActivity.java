@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
@@ -42,6 +43,18 @@ import com.focjoe.roucator.model.WifiItem;
 import com.focjoe.roucator.util.MyApplication;
 import com.focjoe.roucator.util.WifiDbOpenHelper;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
+
+import java.net.HttpURLConnection;
 import java.util.List;
 
 import static com.focjoe.roucator.util.MyApplication.CHANNEL_ID;
@@ -81,6 +94,13 @@ public class WifiInfoActivity extends AppCompatActivity {
     private WifiManager wifiManager;
     private Scanner scanner;
     private ActionBar actionBar;
+
+    SharedPreferences getUsername;
+    String ssid;
+    String capability;
+    String password;
+    int flag;   //用作toastInfo赋值的标志
+    String toastInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -431,19 +451,113 @@ public class WifiInfoActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent;
         switch (item.getItemId()) {
             case R.id.toolbar_menu_upload:
-                Toast.makeText(this, "You clicked upload", Toast.LENGTH_SHORT).show();
+                int dex = 0; //延迟计数
+                flag = 0;   //标志
+                WifiDbOpenHelper dbOpenHelper = new WifiDbOpenHelper(this);
+                SQLiteDatabase db = dbOpenHelper.getReadableDatabase();
+                String querySsid = wifiItem.getSsid();
+                // TODO: 2018/12/14 query one
+                Cursor cursor = db.query(SavedWifiEntry.TABLE_NAME
+                        , null, "ssid=?", new String[]{querySsid}
+                        , null, null, null);
+                // use queried data to create a list
+                if (cursor.getCount() < 1) {
+                    Toast.makeText(this, "还没有保存这个热点的密码哟~", Toast.LENGTH_SHORT).show();
+                    cursor.close();
+                    return false;
+                }
+                cursor.moveToNext();
+                ssid = cursor.getString(1);
+                capability = cursor.getString(2);
+                password = cursor.getString(3);
+
+                cursor.close();
+
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        sendJson();
+                    }
+                });
+                thread.start();
+
+                try {
+                    while ((dex++) != 10) {
+                        Thread.sleep(300);
+                        if (flag == 1) {
+                            Toast.makeText(this, toastInfo, Toast.LENGTH_SHORT).show();
+                            break;
+                        }
+                    }
+                    if (flag != 1) {
+                        Toast.makeText(this, "服务端未响应，稍后重试", Toast.LENGTH_SHORT).show();
+                    }
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+
                 break;
-//            case R.id.toolbar_menu_qr_code:
-//                intent = new Intent(WifiInfoActivity.this, QRCodeGenerateActivity.class);
-//                startActivity(intent);
-//                break;
+
             default:
                 break;
         }
         return false;
+
+
+    }
+
+    public HttpClient getHttpClient() {
+        BasicHttpParams httpParams = new BasicHttpParams();
+        HttpConnectionParams.setConnectionTimeout(httpParams, 5 * 1000);
+        HttpConnectionParams.setSoTimeout(httpParams, 10 * 1000);
+        HttpClient client = new DefaultHttpClient(httpParams);
+        return client;
+    }
+
+    private void sendJson() {
+        //boolean loginValidate = false;
+        String urlStr = "http://192.168.32.2:8080/Test/WFPDServlet";
+        HttpPost post = new HttpPost(urlStr);
+        try {
+            //向服务器写json
+            JSONObject json = new JSONObject();
+            getUsername = getSharedPreferences("saveForwifi", 0);
+            String username = getUsername.getString("username", "");
+            json.put("username", username);
+            json.put("wifiname", ssid);
+            json.put("wifipwd", password);
+            json.put("capa", capability);
+
+
+            System.out.println("==============" + json.toString());
+            //保证json数据不是乱码
+            StringEntity se = new StringEntity(json.toString());
+            se.setContentEncoding(new BasicHeader("data", "application/json"));
+            post.setEntity(se);
+
+            //发送json给服务器
+            HttpClient httpClient = getHttpClient();
+            HttpResponse httpResponse = httpClient.execute(post);
+            //接收来自服务器的数据，这里只有成功与失败的提示信息
+            int httpCode = httpResponse.getStatusLine().getStatusCode();
+            if (httpCode == HttpURLConnection.HTTP_OK && httpResponse != null) {
+                String Info = EntityUtils.toString(httpResponse.getEntity());
+
+                JSONObject result = new JSONObject(Info);
+
+                flag = 1;
+                Log.i("MainActivity", result.getString("vertifyInfo"));
+//                Toast.makeText(this, result.getString("vertifyInfo")
+//                        , Toast.LENGTH_SHORT).show();
+                toastInfo = result.getString("vertifyInfo");
+            }
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
     }
 
     private class Scanner extends BroadcastReceiver {

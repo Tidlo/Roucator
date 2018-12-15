@@ -3,6 +3,7 @@ package com.focjoe.roucator;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -26,6 +27,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     public static String toastInfo = "";
     private static long lastClickTime = 0;
     private static int flag = 0;
+    Toolbar toolbar;
     TextInputEditText username;
     TextInputEditText password;
     TextInputEditText email;
@@ -49,12 +51,28 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
+        initToolbar();
+
         username = findViewById(R.id.name);
         password = findViewById(R.id.pwd);
         email = findViewById(R.id.email);
         phone = findViewById(R.id.phone);
         confirm = findViewById(R.id.confirm_sign_up);
         confirm.setOnClickListener(this);
+    }
+
+    private void initToolbar() {
+        toolbar = findViewById(R.id.sign_up_tool_bar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     @Override
@@ -133,6 +151,10 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 System.out.println(result.getString("vertifyInfo"));
                 Log.i("MainActivity", result.getString("vertifyInfo"));
                 toastInfo = result.getString("vertifyInfo");
+                if (toastInfo.equals("注册成功")) {
+                    Thread.sleep(400);
+                    finish();
+                }
             }
         } catch (Exception exception) {
             exception.printStackTrace();
