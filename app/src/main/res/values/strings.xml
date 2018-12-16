@@ -46,4 +46,6 @@
     <string name="locate">定位</string>
     <string name="saved_item">保存的项目</string>
     <string name="scan_qr_code_to_connect">扫码连Wifi</string>
+    <string name="delete_record">删除记录</string>
+    <string name="do_you_confirm_to_delete">确认要删除吗？</string>
 </resources>

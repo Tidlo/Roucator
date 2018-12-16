@@ -200,6 +200,7 @@ public class WifiInfoActivity extends AppCompatActivity {
                     String pass = cursor.getString(3);
 
                     Log.d(TAG, "onClick: saved:" + cursor.getString(4));
+                    cursor.moveToPrevious();
                     // if successful configured network
                     if (configSucceed(type, ssid, pass)) {
                         sendNotification(ssid);
@@ -381,7 +382,7 @@ public class WifiInfoActivity extends AppCompatActivity {
                 .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        database.execSQL("INSERT INTO wifi VALUES(NULL, ?,?,?)", new Object[]{ssid, type, pass});
+                        database.execSQL("INSERT INTO wifi VALUES(NULL, ?,?,?,?)", new Object[]{ssid, type, pass, "false"});
                         Toast.makeText(WifiInfoActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
                     }
                 })
@@ -398,7 +399,7 @@ public class WifiInfoActivity extends AppCompatActivity {
      */
     private boolean configSucceed(String type, String networkSSID, String networkPass) {
         WifiConfiguration conf = new WifiConfiguration();
-        conf.SSID = "\"" + networkSSID + "\"";   // Please note the quo
+        conf.SSID = "\"" + networkSSID + "\"";
         if (type.equals("WEP")) {
             conf.wepKeys[0] = "\"" + networkPass + "\"";
             conf.wepTxKeyIndex = 0;
@@ -414,6 +415,7 @@ public class WifiInfoActivity extends AppCompatActivity {
         int networkId = wifiManager.addNetwork(conf);
         wifiManager.disconnect();
         if (wifiManager.enableNetwork(networkId, true)) {
+            Log.d(TAG, "configSucceed: enbled");
             wifiManager.reconnect();
             return true;
         } else {
@@ -498,8 +500,6 @@ public class WifiInfoActivity extends AppCompatActivity {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-
-
                 break;
 
             default:
@@ -520,7 +520,7 @@ public class WifiInfoActivity extends AppCompatActivity {
 
     private void sendJson() {
         //boolean loginValidate = false;
-        String urlStr = "http://192.168.32.2:8080/Test/WFPDServlet";
+        String urlStr = MyApplication.SERVER_IP + "WFPDServlet";
         HttpPost post = new HttpPost(urlStr);
         try {
             //向服务器写json
@@ -551,8 +551,7 @@ public class WifiInfoActivity extends AppCompatActivity {
 
                 flag = 1;
                 Log.i("MainActivity", result.getString("vertifyInfo"));
-//                Toast.makeText(this, result.getString("vertifyInfo")
-//                        , Toast.LENGTH_SHORT).show();
+
                 toastInfo = result.getString("vertifyInfo");
             }
         } catch (Exception exception) {

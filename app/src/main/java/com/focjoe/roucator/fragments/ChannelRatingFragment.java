@@ -9,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.focjoe.roucator.R;
 import com.focjoe.roucator.adapter.ChannelRateItemAdapter;
@@ -48,7 +47,6 @@ public class ChannelRatingFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.hasFixedSize();
 
-        TextView textViewBestChannel = view.findViewById(R.id.best_channel);
 
         String bestChannel;
         channelInfos.sort(new Comparator<ChannelInfo>() {
@@ -58,7 +56,6 @@ public class ChannelRatingFragment extends Fragment {
             }
         });
         bestChannel = channelInfos.get(0).getName();
-        textViewBestChannel.setText(bestChannel);
 
         return view;
     }

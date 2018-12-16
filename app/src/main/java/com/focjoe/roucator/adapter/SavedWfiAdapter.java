@@ -1,6 +1,7 @@
 package com.focjoe.roucator.adapter;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -9,11 +10,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.focjoe.roucator.QRCodeGenerateActivity;
 import com.focjoe.roucator.R;
 import com.focjoe.roucator.model.SavedWifi;
 import com.focjoe.roucator.util.MyApplication;
+import com.focjoe.roucator.util.WifiDbOpenHelper;
 
 import java.util.List;
 
@@ -22,6 +25,8 @@ import static android.support.constraint.Constraints.TAG;
 public class SavedWfiAdapter extends RecyclerView.Adapter<SavedWfiAdapter.ViewHolder> {
 
     private List<SavedWifi> savedWifiList;
+    private SQLiteDatabase database;
+    private WifiDbOpenHelper dbOpenHelper;
 
     public SavedWfiAdapter(List<SavedWifi> savedWifiList) {
         this.savedWifiList = savedWifiList;
@@ -56,6 +61,18 @@ public class SavedWfiAdapter extends RecyclerView.Adapter<SavedWfiAdapter.ViewHo
                 intent.putExtra("ssid", savedWifi.getSsid());
                 intent.putExtra("password", savedWifi.getPassword());
                 MyApplication.getContext().startActivity(intent);
+            }
+        });
+
+        viewHolder.cardView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                String ssid = savedWifi.getSsid();
+                dbOpenHelper = new WifiDbOpenHelper(MyApplication.getContext());
+                database = dbOpenHelper.getReadableDatabase();
+                database.execSQL("DELETE FROM wifi WHERE ssid=?", new Object[]{ssid});
+                Toast.makeText(MyApplication.getContext(), "删除成功", Toast.LENGTH_SHORT).show();
+                return true;
             }
         });
     }

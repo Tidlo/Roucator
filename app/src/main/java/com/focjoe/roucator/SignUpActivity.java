@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.focjoe.roucator.util.MyApplication;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -123,7 +125,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     private void sendJson() {
         //boolean loginValidate = false;
-        String urlStr = "http://192.168.32.2:8080/Test/registerServlet";
+        String urlStr = MyApplication.SERVER_IP + "registerServlet";
         HttpPost post = new HttpPost(urlStr);
         try {
             //向服务器写json

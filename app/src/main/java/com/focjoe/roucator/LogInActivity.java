@@ -13,6 +13,7 @@ import android.widget.CheckBox;
 import android.widget.Toast;
 
 import com.focjoe.roucator.model.SavedWifi;
+import com.focjoe.roucator.util.MyApplication;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -136,8 +137,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void sendJson() {
-        //boolean loginValidate = false;
-        String urlStr = "http://192.168.32.2:8080/Test/loginServlet";
+        String urlStr = MyApplication.SERVER_IP + "loginServlet";
         HttpPost post = new HttpPost(urlStr);
         try {
             //向服务器写json
@@ -147,7 +147,6 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
             json.put("name", name);
             json.put("pwd", pwd);
 
-//            System.out.println("=============="+json.toString());
             Log.d("MainActivity", "+=========+" + json.toString());
             //保证json数据不是乱码
             StringEntity se = new StringEntity(json.toString());
@@ -162,10 +161,8 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
             if (httpCode == HttpURLConnection.HTTP_OK && httpResponse != null) {
                 String Info = EntityUtils.toString(httpResponse.getEntity());
                 JSONObject result = new JSONObject(Info);
-//                System.out.println(result.getString("vertifyInfo"));
                 Log.i("MainActivity", result.getString("vertifyInfo"));
                 flag = 1;
-//                toastInfo = getInfo(result.getString("vertifyInfo"));
                 toastInfo = result.getString("vertifyInfo");
                 if (result.getString("vertifyInfo").equals("登陆成功")) {
                     //在判断登录成功后保存账号密码
@@ -189,19 +186,13 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                     List<SavedWifi> wifilist = new ArrayList<>();
                     for (int i = 0; i < JA.length(); i++) {
                         JSONObject jo = JA.getJSONObject(i);
-//                        Log.i("MainActivity", jo.getString("wifiname"));
-//                        Log.i("MainActivity", jo.getString("wifipwd"));
+
                         wifilist.add(new
                                 SavedWifi(jo.getString("wifiname")
                                 , jo.getString("wifipwd")
                                 , jo.getString("capability")));
                     }
 
-//                    for(SavedWifi SW:wifilist){
-//                        Log.i("MainActivity", SW.getSsid());
-//                        Log.i("MainActivity", SW.getPassword());
-//                        Log.i("MainActivity", SW.getCapability());
-//                    }
                     Thread.sleep(400);
                     finish();
                 }
@@ -211,19 +202,6 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
             exception.printStackTrace();
         }
     }
-
-//    public String getInfo(String code) {
-//        switch (code) {
-//            case "0":
-//                return "登陆成功";
-//            case "1":
-//            case "2":
-//                return "用户名或密码错误";
-//            case "3":
-//            default:
-//                return "未知错误";
-//        }
-//    }
 
     public void Remember(Boolean flag) {
         Log.i("MainActivity", "++++++" + flag.toString() + "++++++");
