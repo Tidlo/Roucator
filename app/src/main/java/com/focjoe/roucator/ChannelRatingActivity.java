@@ -107,12 +107,9 @@ public class ChannelRatingActivity extends AppCompatActivity {
 
         for (WifiItem item :
                 wifiItemList) {
-
             ChannelInfo channelInfo;
-
             switch (item.getInfoFrequencyType()) {
                 case "2.4G"://2.4G channels
-
                     switch (item.getChannelWidth()) {
                         case ScanResult.CHANNEL_WIDTH_20MHZ:
                             if (item.getFrequency() == 2412) {
@@ -139,11 +136,8 @@ public class ChannelRatingActivity extends AppCompatActivity {
                                 count[i]++;
                             }
                     }
-//                    channelInfo = channels2dot4GInfoList.get(Arrays.binarySearch(channels2dot4G, item.getChannel()));
-//                    channelInfo.addCount();
                     break;
                 case "5G":
-                    //5G channels
                     channelInfo = channels5GInfoList.get(Arrays.binarySearch(channels5G, item.getChannel()));
                     channelInfo.addCount();
                     break;

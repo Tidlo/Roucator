@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import com.focjoe.roucator.R;
 import com.focjoe.roucator.util.FileUtils;
 
-import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.collections4.Predicate;
 import org.apache.commons.lang3.StringUtils;
 
@@ -95,18 +94,4 @@ class VendorDB implements VendorService {
             return object.contains(filter);
         }
     }
-
-    private class MacContains implements Predicate<String> {
-        private final String filter;
-
-        private MacContains(@NonNull String filter) {
-            this.filter = filter;
-        }
-
-        @Override
-        public boolean evaluate(String object) {
-            return IterableUtils.matchesAny(findMacAddresses(object), new StringContains(filter));
-        }
-    }
-
 }

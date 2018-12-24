@@ -1,5 +1,4 @@
 
-
 package com.focjoe.roucator.model;
 
 import android.support.annotation.NonNull;

@@ -460,7 +460,6 @@ public class WifiInfoActivity extends AppCompatActivity {
                 WifiDbOpenHelper dbOpenHelper = new WifiDbOpenHelper(this);
                 SQLiteDatabase db = dbOpenHelper.getReadableDatabase();
                 String querySsid = wifiItem.getSsid();
-                // TODO: 2018/12/14 query one
                 Cursor cursor = db.query(SavedWifiEntry.TABLE_NAME
                         , null, "ssid=?", new String[]{querySsid}
                         , null, null, null);

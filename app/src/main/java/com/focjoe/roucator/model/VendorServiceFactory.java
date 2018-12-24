@@ -1,5 +1,4 @@
 
-
 package com.focjoe.roucator.model;
 
 import android.content.res.Resources;
