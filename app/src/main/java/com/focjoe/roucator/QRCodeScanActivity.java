@@ -32,8 +32,6 @@ public class QRCodeScanActivity extends AppCompatActivity implements ZXingScanne
         super.onCreate(savedInstanceState);
         mScannerView = new ZXingScannerView(this);   // Programmatically initialize the scanner view
         setContentView(mScannerView);
-
-
     }
 
     @Override
@@ -89,7 +87,6 @@ public class QRCodeScanActivity extends AppCompatActivity implements ZXingScanne
                     }
                 });
         dialog.show();
-
 //        mScannerView.resumeCameraPreview(this);
     }
 

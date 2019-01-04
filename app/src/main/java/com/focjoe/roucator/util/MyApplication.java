@@ -13,7 +13,8 @@ public class MyApplication extends Application {
     private static List<WifiItem> wifiItemList;
     public static int[] currentConnectedWifiIndex = new int[1];
     public static final String CHANNEL_ID = "channel_0";
-    public static final String SERVER_IP = "http://192.168.43.75:8080/Test/";
+    //    public static final String SERVER_IP = "http://10.33.28.193:8080/RoucatorServer_war_exploded/";
+    public static final String SERVER_IP = "http://www.focjoe.com:8080/RoucatorServer_war/";
     private static NotificationManager notificationManager;
 
 
