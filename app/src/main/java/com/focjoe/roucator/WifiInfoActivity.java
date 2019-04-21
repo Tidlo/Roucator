@@ -108,7 +108,7 @@ public class WifiInfoActivity extends AppCompatActivity {
         TextView textViewManufacture = findViewById(R.id.info_manufacture);
         textViewLinkChannel = findViewById(R.id.info_link_channel);
         textViewDistance = findViewById(R.id.info_distance);
-        TextView textViewCapility = findViewById(R.id.info_capability);
+        TextView textViewCapability = findViewById(R.id.info_capability);
         textViewFrequencyBand = findViewById(R.id.info_frequency_band);
 
         Button buttonLocator = findViewById(R.id.btn_test_locator);
@@ -146,7 +146,7 @@ public class WifiInfoActivity extends AppCompatActivity {
         textViewManufacture.setText(wifiItem.getInfoManufacture());
         textViewLinkChannel.setText(String.valueOf(wifiItem.getChannel()));
         textViewDistance.setText(wifiItem.getInfoDistance());
-        textViewCapility.setText(wifiItem.getInfoCapility());
+        textViewCapability.setText(wifiItem.getInfoCapility());
         textViewFrequencyBand.setText(wifiItem.getInfoFrequency());
 
         //get db
@@ -199,7 +199,6 @@ public class WifiInfoActivity extends AppCompatActivity {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         database.execSQL("DELETE FROM wifi WHERE ssid=?", new Object[]{ssid});
-                                        // TODO: 2018/12/12 使用 SnackBar 代替 Toast 
                                         Toast.makeText(WifiInfoActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
                                     }
                                 })
@@ -487,13 +486,10 @@ public class WifiInfoActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 break;
-
             default:
                 break;
         }
         return false;
-
-
     }
 
     public HttpClient getHttpClient() {

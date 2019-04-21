@@ -148,6 +148,12 @@ public class Tools {
         }
     }
 
+    /**
+     * 计算用户与信号源之间的距离
+     *
+     * @param level 无线信号强度，以分贝(db)计
+     * @return 距离(m)
+     */
     public static int calculatePercentage(int level) {
         int lev;
         if (level > -30) lev = -30;
