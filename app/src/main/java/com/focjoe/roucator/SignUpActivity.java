@@ -125,7 +125,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     private void sendJson() {
         //boolean loginValidate = false;
-        String urlStr = MyApplication.SERVER_IP + "registerServlet";
+        String urlStr = MyApplication.SERVER_IP + "RegisterServlet";
         HttpPost post = new HttpPost(urlStr);
         try {
             //向服务器写json
@@ -150,9 +150,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 String Info = EntityUtils.toString(httpResponse.getEntity());
                 JSONObject result = new JSONObject(Info);
                 flag = 1;
-                System.out.println(result.getString("vertifyInfo"));
-                Log.i("MainActivity", result.getString("vertifyInfo"));
-                toastInfo = result.getString("vertifyInfo");
+                System.out.println(result.getString("verifyInfo"));
+                Log.i("MainActivity", result.getString("verifyInfo"));
+                toastInfo = result.getString("verifyInfo");
                 if (toastInfo.equals("注册成功")) {
                     Thread.sleep(400);
                     finish();

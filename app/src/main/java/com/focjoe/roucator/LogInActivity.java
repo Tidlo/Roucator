@@ -30,6 +30,7 @@ import org.json.JSONObject;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class LogInActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -73,7 +74,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
         sign_up.setOnClickListener(this);
         remember = findViewById(R.id.checkBox);
         spForwifi = getSharedPreferences("saveForwifi", 0);
-        sp = getSharedPreferences("save", 0);
+        sp = getSharedPreferences("user_info", 0);
         Remember(sp.getBoolean("rememberpwd", false));
     }
 
@@ -95,7 +96,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.log_in:
-                if (username.getText().length() == 0 || password.getText().length() == 0) {
+                if (Objects.requireNonNull(username.getText()).length() == 0 || Objects.requireNonNull(password.getText()).length() == 0) {
                     Toast.makeText(this, "信息未填写完整", Toast.LENGTH_SHORT).show();
                 } else if (!fastclick()) {
                     try {
@@ -137,7 +138,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void sendJson() {
-        String urlStr = MyApplication.SERVER_IP + "loginServlet";
+        String urlStr = MyApplication.SERVER_IP + "LoginServlet";
         HttpPost post = new HttpPost(urlStr);
         try {
             //向服务器写json
@@ -161,17 +162,18 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
             if (httpCode == HttpURLConnection.HTTP_OK && httpResponse != null) {
                 String Info = EntityUtils.toString(httpResponse.getEntity());
                 JSONObject result = new JSONObject(Info);
-                Log.i("MainActivity", result.getString("vertifyInfo"));
+                Log.i("MainActivity", result.getString("verifyInfo"));
                 flag = 1;
-                toastInfo = result.getString("vertifyInfo");
-                if (result.getString("vertifyInfo").equals("登陆成功")) {
+                toastInfo = result.getString("verifyInfo");
+                if (result.getString("verifyInfo").equals("登陆成功")) {
                     //在判断登录成功后保存账号密码
-                    editor = sp.edit();
+
                     editorForwifi = spForwifi.edit();
                     editorForwifi.putString("username", name);
                     if (remember.isChecked()) {
+                        editor = sp.edit();
                         editor.putBoolean("rememberpwd", true);
-                        editor.putString("name", name);
+                        editor.putString("username", name);
                         editor.putString("pwd", pwd);
                         Log.i("MainActivity", name);
                         Log.i("MainActivity", pwd);

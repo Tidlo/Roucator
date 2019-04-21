@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -89,6 +90,8 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionButton btnRefresh;
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
+    private TextView drawerUserName;
+    private TextView drawerUserMail;
 
     // notifications
     NotificationManager notificationManager;
@@ -145,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
         initNavigationView();
 
 
+
         //set up notification manager
         notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         //create notification channel
@@ -171,6 +175,18 @@ public class MainActivity extends AppCompatActivity {
         listener.onRefresh();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        SharedPreferences sp = getSharedPreferences("saveForwifi", 0);
+        String username = sp.getString("username", "");
+        Log.d(TAG, "onResume: here is username:" + username);
+        if (!username.equals("")) {
+            this.drawerUserName.setText(username);
+        }
+    }
+
     private void initNavigationView() {
         drawerLayout = findViewById(R.id.main_drawer_layout);
         navigationView = findViewById(R.id.nav_view);
@@ -182,6 +198,10 @@ public class MainActivity extends AppCompatActivity {
         };
         drawerLayout.setDrawerListener(toggle);
         toggle.syncState();
+
+        View header = navigationView.getHeaderView(0);
+        drawerUserName = header.findViewById(R.id.drawer_username);
+        drawerUserMail = header.findViewById(R.id.drawer_usermail);
 
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -238,8 +258,6 @@ public class MainActivity extends AppCompatActivity {
                 .setNegativeButton(R.string.select_from_exist, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-//                        dialog = buildSelectDialog();
-//                        ((Dialog) dialog).show();
                         Intent intent = new Intent(MainActivity.this, SavedWifiActivity.class);
                         startActivity(intent);
 

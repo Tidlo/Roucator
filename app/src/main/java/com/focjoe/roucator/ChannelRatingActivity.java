@@ -34,7 +34,6 @@ public class ChannelRatingActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private ViewPager viewPager;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +54,7 @@ public class ChannelRatingActivity extends AppCompatActivity {
             test += "\n";
         }
         Log.d(TAG, "onCreate: 5G:" + test);
+
 
         test = "";
         for (ChannelInfo info :
@@ -112,6 +112,8 @@ public class ChannelRatingActivity extends AppCompatActivity {
                 case "2.4G"://2.4G channels
                     switch (item.getChannelWidth()) {
                         case ScanResult.CHANNEL_WIDTH_20MHZ:
+                            //如果接入点频率为位于频率带边缘的 2412mhz 和 2472mhz
+                            //只占用该信道和与它相邻的信道
                             if (item.getFrequency() == 2412) {
                                 count[1]++;
                                 count[2]++;
@@ -119,6 +121,7 @@ public class ChannelRatingActivity extends AppCompatActivity {
                                 count[13]++;
                                 count[12]++;
                             } else {
+                                //其他频率则会占用中心频率两侧的信道
                                 cneterChannel = Tools.frequencyToChannel(item.getFrequency());
                                 count[cneterChannel]++;
                                 count[cneterChannel - 1]++;
@@ -158,6 +161,4 @@ public class ChannelRatingActivity extends AppCompatActivity {
     public void onDestroy() {
         super.onDestroy();
     }
-
-
 }

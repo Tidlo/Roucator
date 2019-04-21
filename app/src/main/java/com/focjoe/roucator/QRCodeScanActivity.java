@@ -32,8 +32,6 @@ public class QRCodeScanActivity extends AppCompatActivity implements ZXingScanne
         super.onCreate(savedInstanceState);
         mScannerView = new ZXingScannerView(this);   // Programmatically initialize the scanner view
         setContentView(mScannerView);
-
-
     }
 
     @Override
@@ -51,17 +49,9 @@ public class QRCodeScanActivity extends AppCompatActivity implements ZXingScanne
 
     @Override
     public void handleResult(Result rawResult) {
-        // Do something with the result here
-        Log.v(TAG, rawResult.getText()); // Prints scan results
-        Log.v(TAG, rawResult.getBarcodeFormat().toString()); // Prints the scan format (qrcode, pdf417 etc.)
-
-        //stop camera scan while got result
         mScannerView.stopCamera();
-        String wifiElement[] = rawResult.getText().replace("WIFI:", "").split(";");
+        String[] wifiElement = rawResult.getText().replace("WIFI:", "").split(";");
 
-        Log.d(TAG, "handleResult: wifi element 0:" + wifiElement[0]);
-        Log.d(TAG, "handleResult: wifi element 1:" + wifiElement[1]);
-        Log.d(TAG, "handleResult: wifi element 2:" + wifiElement[2]);
         final String ssid = getParam(wifiElement[0]);
         final String type = getParam(wifiElement[1]);
         final String pass = getParam(wifiElement[2]);
@@ -78,7 +68,6 @@ public class QRCodeScanActivity extends AppCompatActivity implements ZXingScanne
                         } else {
                             Toast.makeText(QRCodeScanActivity.this, R.string.connect_fail, Toast.LENGTH_SHORT).show();
                         }
-
                         finish();
                     }
                 })
@@ -89,8 +78,6 @@ public class QRCodeScanActivity extends AppCompatActivity implements ZXingScanne
                     }
                 });
         dialog.show();
-
-//        mScannerView.resumeCameraPreview(this);
     }
 
     public boolean connectToWifi(String type, String networkSSID, String networkPass) {

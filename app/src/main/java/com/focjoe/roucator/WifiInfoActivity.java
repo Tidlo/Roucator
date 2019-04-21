@@ -17,7 +17,6 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NotificationCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
@@ -63,27 +62,12 @@ import static com.focjoe.roucator.util.MyApplication.CHANNEL_ID;
 public class WifiInfoActivity extends AppCompatActivity {
 
     private static final String TAG = "wifi info activity";
-    //views
-    private Toolbar toolbar;
-    private TextView textViewSsid;
-    private TextView textViewMacAddress;
-    private ImageView configured;
     private ImageView signalBar;
 
-    private ImageView freqIcon;
-    private ImageView savedIcon;
-
-    private TextView textViewManufacture;
     private TextView textViewLinkChannel;
     private TextView textViewDistance;
-    private TextView textViewCapility;
     private TextView textViewFrequencyBand;
 
-
-    private Button buttonLocator;
-    private Button buttonManage;
-    private Button buttonConnect;
-    private FloatingActionButton fabRefresh;
 
     //local variables
     private int wifiItemIndex;
@@ -93,7 +77,6 @@ public class WifiInfoActivity extends AppCompatActivity {
     private Cursor cursor;
     private WifiManager wifiManager;
     private Scanner scanner;
-    private ActionBar actionBar;
 
     SharedPreferences getUsername;
     String ssid;
@@ -114,24 +97,24 @@ public class WifiInfoActivity extends AppCompatActivity {
         wifiItem = MyApplication.getWifiItemList().get(wifiItemIndex);
 
         //init views
-        textViewSsid = findViewById(R.id.info_wifi_ssid);
-        textViewMacAddress = findViewById(R.id.info_wifi_mac);
+        TextView textViewSsid = findViewById(R.id.info_wifi_ssid);
+        TextView textViewMacAddress = findViewById(R.id.info_wifi_mac);
 
-        freqIcon = findViewById(R.id.info_wifi_token);
+        ImageView freqIcon = findViewById(R.id.info_wifi_token);
         signalBar = findViewById(R.id.info_wifi_signal_bar);
-        configured = findViewById(R.id.info_wifi_configured);
-        savedIcon = findViewById(R.id.info_wifi_saved);
+        ImageView configured = findViewById(R.id.info_wifi_configured);
+        ImageView savedIcon = findViewById(R.id.info_wifi_saved);
 
-        textViewManufacture = findViewById(R.id.info_manufacture);
+        TextView textViewManufacture = findViewById(R.id.info_manufacture);
         textViewLinkChannel = findViewById(R.id.info_link_channel);
         textViewDistance = findViewById(R.id.info_distance);
-        textViewCapility = findViewById(R.id.info_capability);
+        TextView textViewCapability = findViewById(R.id.info_capability);
         textViewFrequencyBand = findViewById(R.id.info_frequency_band);
 
-        buttonLocator = findViewById(R.id.btn_test_locator);
-        buttonManage = findViewById(R.id.btn_manage);
-        buttonConnect = findViewById(R.id.btn_connect);
-        fabRefresh = findViewById(R.id.btn_refresh_info);
+        Button buttonLocator = findViewById(R.id.btn_test_locator);
+        Button buttonManage = findViewById(R.id.btn_manage);
+        Button buttonConnect = findViewById(R.id.btn_connect);
+        FloatingActionButton fabRefresh = findViewById(R.id.btn_refresh_info);
 
         //set views
         if (wifiItem.isConfigured()) {
@@ -163,7 +146,7 @@ public class WifiInfoActivity extends AppCompatActivity {
         textViewManufacture.setText(wifiItem.getInfoManufacture());
         textViewLinkChannel.setText(String.valueOf(wifiItem.getChannel()));
         textViewDistance.setText(wifiItem.getInfoDistance());
-        textViewCapility.setText(wifiItem.getInfoCapility());
+        textViewCapability.setText(wifiItem.getInfoCapility());
         textViewFrequencyBand.setText(wifiItem.getInfoFrequency());
 
         //get db
@@ -216,7 +199,6 @@ public class WifiInfoActivity extends AppCompatActivity {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         database.execSQL("DELETE FROM wifi WHERE ssid=?", new Object[]{ssid});
-                                        // TODO: 2018/12/12 使用 SnackBar 代替 Toast 
                                         Toast.makeText(WifiInfoActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
                                     }
                                 })
@@ -256,7 +238,8 @@ public class WifiInfoActivity extends AppCompatActivity {
     }
 
     private void initToolbar() {
-        toolbar = findViewById(R.id.info_tool_bar);
+        //views
+        Toolbar toolbar = findViewById(R.id.info_tool_bar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -371,6 +354,7 @@ public class WifiInfoActivity extends AppCompatActivity {
 
     /**
      * show a dialog to confirm whether save the wifi information to local data base.
+     *
      * @param type
      * @param ssid
      * @param pass
@@ -392,6 +376,7 @@ public class WifiInfoActivity extends AppCompatActivity {
 
     /**
      * configure a wifi and return result
+     *
      * @param type
      * @param networkSSID
      * @param networkPass
@@ -427,6 +412,7 @@ public class WifiInfoActivity extends AppCompatActivity {
 
     /**
      * Send notification when successful connected to ssid
+     *
      * @param ssid
      */
     private void sendNotification(String ssid) {
@@ -500,13 +486,10 @@ public class WifiInfoActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 break;
-
             default:
                 break;
         }
         return false;
-
-
     }
 
     public HttpClient getHttpClient() {
@@ -519,7 +502,7 @@ public class WifiInfoActivity extends AppCompatActivity {
 
     private void sendJson() {
         //boolean loginValidate = false;
-        String urlStr = MyApplication.SERVER_IP + "WFPDServlet";
+        String urlStr = MyApplication.SERVER_IP + "WifiSyncServlet";
         HttpPost post = new HttpPost(urlStr);
         try {
             //向服务器写json
